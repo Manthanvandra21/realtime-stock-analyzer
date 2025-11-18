@@ -12,3 +12,29 @@
 # Placeholder: Trend Prediction Module
 # Will use machine learning models trained on historical market data
 # to forecast upcoming stock trends and momentum shifts.
+
+def clean_data(data):
+    """
+    Placeholder: Cleans raw stock market data.
+    Future implementation will handle missing values, outliers,
+    and normalization.
+    """
+    pass
+
+
+def prepare_training_data(data):
+    """
+    Placeholder: Prepares processed data for ML model training.
+    Future implementation will create feature sets and labels
+    from historical stock patterns.
+    """
+    pass
+
+
+def calculate_volatility(data):
+    """
+    Placeholder: Calculates stock price volatility.
+    Future implementation will derive volatility metrics from
+    historical price fluctuations.
+    """
+    pass
