@@ -1,5 +1,12 @@
 -- File: db/schema.sql
 
+-- Placeholder: Users table structure
+-- user_id
+-- username
+-- email
+-- password (placeholder, will be hashed later)
+-- created_at
+
 -- Placeholder: Users table
 CREATE TABLE IF NOT EXISTS users_placeholder (
     id INT,
