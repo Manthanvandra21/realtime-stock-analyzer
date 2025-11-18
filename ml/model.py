@@ -1,5 +1,11 @@
 # File: ml/model.py
 
-# Placeholder for AI trend prediction model
-# Future implementation: This module will use historical stock data, technical indicators,
-# and machine learning algorithms to predict short-term stock price trends and volatility.
+# Placeholder: Risk Evaluation Module
+# Future implementation will analyze volatility, beta, moving averages,
+# and sudden price movements to generate risk scores for each stock.
+
+# Placeholder: Trend Prediction Module
+# Future implementation will use machine learning models trained on
+# historical stock data and technical indicators to predict upcoming
+# price trends and momentum shifts.
+
