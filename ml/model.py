@@ -38,11 +38,13 @@ def calculate_volatility(data):
     historical price fluctuations.
     """
     pass
+
 # Here we will clean data
 # Here we will do prediction using linear method
 # Here we will do prediction using AR method
 # Here we will pick best method
 
-
-
-
+# To train the model, we need old price data
+# Model will learn patterns from past data
+# We will check accuracy later
+# Better accuracy = better predictions
