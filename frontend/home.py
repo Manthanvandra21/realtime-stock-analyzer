@@ -38,3 +38,14 @@ with st.sidebar:
     # Here will be the time range buttons (1 day, 1 week etc.)
     # Here will be dark/light mode switch
     # Here will be button for portfolio view
+    pass
+
+# -------------------------------
+# Added Top Header Bar Placeholders
+# -------------------------------
+
+# --- TOP HEADER BAR ---
+# Top Bar: Project Title
+# Top Bar: Last updated time
+# Top Bar: Refresh button
+# Top Bar: Profile/Settings icon
