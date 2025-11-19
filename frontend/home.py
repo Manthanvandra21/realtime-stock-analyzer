@@ -29,3 +29,12 @@ risk_score_placeholder = st.empty()
 # area for charts
 st.subheader("📊 Charts")
 charts_area = st.empty()
+
+# -------------------------------
+# Added on Nov 21 — Sidebar Outline
+# -------------------------------
+with st.sidebar:
+    # Here will be the stock selection dropdown
+    # Here will be the time range buttons (1 day, 1 week etc.)
+    # Here will be dark/light mode switch
+    # Here will be button for portfolio view
