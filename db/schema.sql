@@ -30,8 +30,13 @@ CREATE TABLE IF NOT EXISTS activity_logs_placeholder (
     action VARCHAR(255),
     timestamp DATETIME
 );
+
 -- User table will store id, name, email, password
 -- Portfolio table will store user stock details
 -- Watchlist table will store saved stocks
 -- Logs table will store user actions and time
 
+-- User table connects to portfolio table
+-- One user can have many stocks
+-- Watchlist belongs to a user
+-- Logs belong to a user and store actions
