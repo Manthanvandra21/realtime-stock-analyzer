@@ -15,6 +15,17 @@ stock_search_box = st.empty()
 st.subheader("💵 Stock Prices")
 price_display_area = st.empty()
 
+# -------------------------------
+# PRICE AREA FUTURE FEATURES
+# -------------------------------
+
+# This section will later display:
+# - Current live stock price fetched from backend
+# - High, low, open, close values
+# - Percentage change and price movement indicator
+# - Color-coded gains/losses for quick visibility
+
+
 # trend prediction box
 st.subheader("📈 Trend & Prediction")
 trend_prediction_box = st.empty()
