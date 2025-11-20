@@ -73,3 +73,11 @@ symbol = st.text_input("Enter Stock Symbol")
 if st.button("Get Price"):
     data = requests.get(f"http://127.0.0.1:5000/api/get_price/{symbol}").json()
     st.write(data)
+
+
+# -----------------------------------------
+# NEW UI IMPROVEMENT (as instructed)
+# -----------------------------------------
+
+st.write("---")
+st.subheader("API Tester Section")
