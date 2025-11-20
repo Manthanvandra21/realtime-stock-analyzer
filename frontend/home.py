@@ -49,3 +49,16 @@ with st.sidebar:
 # Top Bar: Last updated time
 # Top Bar: Refresh button
 # Top Bar: Profile/Settings icon
+
+
+# -----------------------------------------
+# NEW SIDE MENU PLACEHOLDERS (as instructed)
+# -----------------------------------------
+
+# Side Menu: Home button
+# Side Menu: Portfolio
+# Side Menu: Risk Engine
+# Side Menu: News Section
+# Side Menu: Compare Stocks
+# Side Menu: Settings
+
