@@ -48,3 +48,8 @@ def calculate_volatility(data):
 # Model will learn patterns from past data
 # We will check accuracy later
 # Better accuracy = better predictions
+
+# Model needs Open, High, Low, Close prices
+# Model needs volume data
+# More data = better prediction
+# Data cleaning is important before training
