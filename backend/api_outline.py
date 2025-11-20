@@ -39,3 +39,10 @@
 # Step 4: Backend sends response to frontend
 
 # Step 5: Frontend shows updated data on screen
+
+
+
+# REAL API for live stock price
+@app.route('/api/get_price/<symbol>', methods=['GET'])
+def get_price(symbol):
+    return {"symbol": symbol, "price": 123.45}
