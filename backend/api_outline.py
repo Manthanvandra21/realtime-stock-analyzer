@@ -28,3 +28,14 @@
 
 # API: Latest news for stock
 
+
+
+# Step 1: User sends request to backend
+
+# Step 2: Backend calls API or database
+
+# Step 3: Backend processes the data
+
+# Step 4: Backend sends response to frontend
+
+# Step 5: Frontend shows updated data on screen
