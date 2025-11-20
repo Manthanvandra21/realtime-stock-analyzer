@@ -1,4 +1,5 @@
 import streamlit as st
+import requests
 
 st.set_page_config(page_title="Real-Time Stock Price Analyzer", layout="wide")
 
@@ -62,3 +63,13 @@ with st.sidebar:
 # Side Menu: Compare Stocks
 # Side Menu: Settings
 
+
+# -----------------------------------------
+# NEW API TEST SECTION (as instructed)
+# -----------------------------------------
+
+st.subheader("Test Stock Price API")
+symbol = st.text_input("Enter Stock Symbol")
+if st.button("Get Price"):
+    data = requests.get(f"http://127.0.0.1:5000/api/get_price/{symbol}").json()
+    st.write(data)
