@@ -81,3 +81,10 @@ if st.button("Get Price"):
 
 st.write("---")
 st.subheader("API Tester Section")
+
+# -----------------------------------------
+# NEW EXPLANATION LINES (as instructed)
+# -----------------------------------------
+
+st.write("This tool allows you to check stock prices.")
+st.write("Type a stock symbol and click the button.")
