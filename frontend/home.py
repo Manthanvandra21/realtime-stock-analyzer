@@ -88,3 +88,12 @@ st.subheader("API Tester Section")
 
 st.write("This tool allows you to check stock prices.")
 st.write("Type a stock symbol and click the button.")
+
+# -----------------------------------------
+# CONNECT TO BACKEND (TEST BOX) — PLACEHOLDERS
+# -----------------------------------------
+
+# Backend Test Box: Title
+# Backend Test Box: Input field placeholder
+# Backend Test Box: Button placeholder
+# Backend Test Box: Output display placeholder
