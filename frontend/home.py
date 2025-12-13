@@ -108,3 +108,20 @@ st.write("Type a stock symbol and click the button.")
 # Backend Test Box: Input field placeholder
 # Backend Test Box: Button placeholder
 # Backend Test Box: Output display placeholder
+
+
+# -------------------------------------------------
+# STOCK RISK ANALYSIS UI BLOCK (PLACEHOLDERS ONLY)
+# -------------------------------------------------
+
+st.write("---")
+st.subheader("Stock Risk Analysis (Coming Soon)")
+
+# Risk Score Box Placeholder
+risk_score_box_placeholder = st.empty()
+
+# Risk Explanation Line Placeholder
+risk_explanation_placeholder = st.empty()
+
+# Risk Meter Placeholder (Coming Soon)
+risk_meter_placeholder = st.empty()
