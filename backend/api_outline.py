@@ -73,3 +73,20 @@ def get_price(symbol):
 # - If symbol is invalid → return error JSON with message "Invalid stock symbol".
 # - If API provider fails → return error JSON with message "Data fetch error".
 # - If unknown server issue → return error JSON with "Internal server error".
+
+# -----------------------------------------
+# RISK SCORE CALCULATOR API — PLANNING NOTES
+# -----------------------------------------
+
+# What this API will do:
+# This API will calculate risk score for a stock.
+
+# Inputs needed:
+# Stock symbol, past price data, volatility, moving averages.
+
+# Outputs:
+# A risk score between 1–10 and short explanation text.
+
+# Possible errors:
+# Not enough historical data, API failure, invalid symbol.
+
