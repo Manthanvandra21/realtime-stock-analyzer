@@ -125,3 +125,13 @@ risk_explanation_placeholder = st.empty()
 
 # Risk Meter Placeholder (Coming Soon)
 risk_meter_placeholder = st.empty()
+
+# -----------------------------------------
+# RISK ANALYSIS FUTURE NOTES
+# -----------------------------------------
+
+# This part will show risk score from backend
+# User will be able to see if stock is high or low risk
+# Risk will be calculated using volatility and trends
+# Color indicators will show low, medium, or high risk
+
