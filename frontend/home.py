@@ -1,140 +1,135 @@
 import streamlit as st
 import requests
 
-st.set_page_config(page_title="Real-Time Stock Price Analyzer", layout="wide")
+# -----------------------------------------
+# PAGE CONFIG
+# -----------------------------------------
+st.set_page_config(
+    page_title="Real-Time Stock Price Analyzer",
+    layout="wide"
+)
 
-# title
+# -----------------------------------------
+# MAIN TITLE
+# -----------------------------------------
 st.title("📈 Real-Time Stock Price Analyzer")
-st.write("Welcome to the Real-Time Stock Price Analyzer with AI-Powered Risk Engine & Portfolio Manager.")
+st.write(
+    "Welcome to the Real-Time Stock Price Analyzer with AI-Powered "
+    "Risk Engine & Portfolio Manager."
+)
 
-# stock search input
+st.write("---")
+
+# -----------------------------------------
+# SIDEBAR (NAVIGATION & CONTROLS - PLACEHOLDERS)
+# -----------------------------------------
+with st.sidebar:
+    st.header("📂 Navigation")
+
+    # Sidebar placeholders (no logic yet)
+    st.write("• Home")
+    st.write("• Portfolio")
+    st.write("• Risk Engine")
+    st.write("• News")
+    st.write("• Compare Stocks")
+    st.write("• Settings")
+
+    st.write("---")
+    st.write("Theme switch coming soon")
+    st.write("Time range selector coming soon")
+
+# -----------------------------------------
+# MAIN DASHBOARD LAYOUT
+# -----------------------------------------
 st.subheader("🔍 Stock Search")
-stock_search_box = st.empty()
+stock_search_box = st.text_input("Enter stock symbol (example: AAPL)")
 
-# area for stock prices
+st.write("---")
+
+# -----------------------------------------
+# PRICE DISPLAY AREA
+# -----------------------------------------
 st.subheader("💵 Stock Prices")
 price_display_area = st.empty()
 
-# -------------------------------
-# PRICE AREA FUTURE FEATURES
-# -------------------------------
+# Future notes:
+# - Live price
+# - Open, High, Low, Close
+# - Percentage change
+# - Gain/Loss color indicators
 
-# This section will later display:
-# - Current live stock price fetched from backend
-# - High, low, open, close values
-# - Percentage change and price movement indicator
-# - Color-coded gains/losses for quick visibility
-
-
-# trend prediction box
+# -----------------------------------------
+# TREND & PREDICTION
+# -----------------------------------------
 st.subheader("📈 Trend & Prediction")
 trend_prediction_box = st.empty()
 
-# portfolio summary
+# -----------------------------------------
+# PORTFOLIO SUMMARY
+# -----------------------------------------
 st.subheader("🗂 Portfolio Summary")
 portfolio_summary_box = st.empty()
 
-# risk score placeholder
+# -----------------------------------------
+# RISK SCORE SECTION
+# -----------------------------------------
 st.subheader("⚠️ Risk Score")
 risk_score_placeholder = st.empty()
 
-# area for charts
+# -----------------------------------------
+# CHARTS AREA
+# -----------------------------------------
 st.subheader("📊 Charts")
 charts_area = st.empty()
 
-# -------------------------------
-# Added on Nov 21 — Sidebar Outline
-# -------------------------------
-with st.sidebar:
-    # Here will be the stock selection dropdown
-    # Here will be the time range buttons (1 day, 1 week etc.)
-    # Here will be dark/light mode switch
-    # Here will be button for portfolio view
-    pass
+# -----------------------------------------
+# NEWS SECTION PLACEHOLDER
+# -----------------------------------------
+st.subheader("📰 Latest Stock News")
+news_placeholder = st.empty()
 
-# -------------------------------
-# Added Top Header Bar Placeholders
-# -------------------------------
-
-# --- TOP HEADER BAR ---
-# Top Bar: Project Title
-# Top Bar: Last updated time
-# Top Bar: Refresh button
-# Top Bar: Profile/Settings icon
-
+st.write("---")
 
 # -----------------------------------------
-# NEW SIDE MENU PLACEHOLDERS (as instructed)
+# BACKEND API TEST SECTION (SAFE VERSION)
 # -----------------------------------------
+st.subheader("🧪 Test Stock Price API")
 
-# Side Menu: Home button
-# Side Menu: Portfolio
-# Side Menu: Risk Engine
-# Side Menu: News Section
-# Side Menu: Compare Stocks
-# Side Menu: Settings
+symbol = st.text_input("Enter Stock Symbol for API Test")
 
-
-# -----------------------------------------
-# NEW API TEST SECTION (as instructed)
-# -----------------------------------------
-
-st.subheader("Test Stock Price API")
-symbol = st.text_input("Enter Stock Symbol")
 if st.button("Get Price"):
-    data = requests.get(f"http://127.0.0.1:5000/api/get_price/{symbol}").json()
-    st.write(data)
-
+    if symbol.strip() == "":
+        st.warning("Please enter a stock symbol.")
+    else:
+        try:
+            response = requests.get(
+                f"http://127.0.0.1:5000/api/get_price/{symbol}"
+            )
+            data = response.json()
+            st.success("API Response:")
+            st.write(data)
+        except Exception as e:
+            st.error("Backend not reachable or error occurred.")
+            st.write(str(e))
 
 # -----------------------------------------
-# NEW UI IMPROVEMENT (as instructed)
+# RISK ANALYSIS PLACEHOLDERS
 # -----------------------------------------
-
 st.write("---")
-st.subheader("API Tester Section")
+st.subheader("📊 Stock Risk Analysis (Coming Soon)")
 
-# -----------------------------------------
-# NEW EXPLANATION LINES (as instructed)
-# -----------------------------------------
-
-st.write("This tool allows you to check stock prices.")
-st.write("Type a stock symbol and click the button.")
-
-# -----------------------------------------
-# CONNECT TO BACKEND (TEST BOX) — PLACEHOLDERS
-# -----------------------------------------
-
-# Backend Test Box: Title
-# Backend Test Box: Input field placeholder
-# Backend Test Box: Button placeholder
-# Backend Test Box: Output display placeholder
-
-
-# -------------------------------------------------
-# STOCK RISK ANALYSIS UI BLOCK (PLACEHOLDERS ONLY)
-# -------------------------------------------------
-
-st.write("---")
-st.subheader("Stock Risk Analysis (Coming Soon)")
-
-# Risk Score Box Placeholder
 risk_score_box_placeholder = st.empty()
-
-# Risk Explanation Line Placeholder
 risk_explanation_placeholder = st.empty()
-
-# Risk Meter Placeholder (Coming Soon)
 risk_meter_placeholder = st.empty()
 
+st.write(
+    "This section will display the calculated risk score using "
+    "volatility, trends, and moving averages."
+)
+
 # -----------------------------------------
-# RISK ANALYSIS FUTURE NOTES
+# FOOTER NOTES
 # -----------------------------------------
-
-# This part will show risk score from backend
-# User will be able to see if stock is high or low risk
-# Risk will be calculated using volatility and trends
-# Color indicators will show low, medium, or high risk
-
-st.write("Risk score feature coming soon!")
-st.write("You will soon see stock risk level here.")
-
+st.write("---")
+st.write("This project is under active development.")
+st.write("More features will be enabled step by step.")
