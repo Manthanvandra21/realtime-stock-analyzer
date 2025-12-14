@@ -1,92 +1,182 @@
-# File: backend/app.py
+"""
+File: backend/api_outline.py
 
-# This part will show stock price
+Purpose:
+This file contains ONLY planning notes and API outlines.
+No real business logic or database code should be written here.
 
-# This part will manage portfolio
+This file helps the team understand:
+- What APIs will exist
+- What each API will do
+- What input/output is expected
+- How frontend and backend will communicate
+"""
 
-# This part will check risk
+# ==================================================
+# BACKEND RESPONSIBILITIES (HIGH LEVEL)
+# ==================================================
 
-# This part will compare stocks
+# 1. Fetch live stock prices
+# 2. Store and manage user portfolio
+# 3. Calculate stock risk score
+# 4. Compare multiple stocks
+# 5. Fetch latest stock-related news
 
-# This part will show news
+# ==================================================
+# GENERAL BACKEND FLOW
+# ==================================================
 
+# Step 1: Frontend sends request (API call)
+# Step 2: Backend validates input
+# Step 3: Backend fetches data from API / DB
+# Step 4: Backend processes and formats data
+# Step 5: Backend sends JSON response to frontend
+# Step 6: Frontend displays data to user
 
+# ==================================================
+# API 1: GET LIVE STOCK PRICE
+# ==================================================
 
-# API: Get live stock price
+# Endpoint:
+# GET /api/get_price/<symbol>
 
-# API: Historical data
+# Purpose:
+# Returns the current market price of a stock.
 
-# API: Portfolio update
+# Input:
+# - symbol (string): Stock ticker symbol (example: AAPL, TSLA)
+
+# Processing Steps:
+# - Validate symbol (not empty, valid format)
+# - Call external market data API
+# - Extract latest price and timestamp
+# - Format response
+
+# Output (JSON):
+# {
+#   "symbol": "AAPL",
+#   "price": 123.45,
+#   "timestamp": "2025-01-01 10:30:00",
+#   "status": "success"
+# }
+
+# Possible Errors:
+# - Symbol missing
+# - Invalid symbol
+# - External API failure
+# - Internal server error
+
+# ==================================================
+# API 2: GET HISTORICAL STOCK DATA
+# ==================================================
+
+# Endpoint:
+# GET /api/historical/<symbol>
+
+# Purpose:
+# Returns past stock prices for charts and analysis.
+
+# Input:
+# - symbol (string)
+# - optional date range
+
+# Output:
+# - List of prices with dates
+
+# ==================================================
+# API 3: PORTFOLIO MANAGEMENT
+# ==================================================
 
 # API: Add stock to portfolio
+# POST /api/portfolio/add
 
 # API: Remove stock from portfolio
+# POST /api/portfolio/remove
 
-# API: Get risk score
+# API: Get portfolio summary
+# GET /api/portfolio
 
-# API: Compare multiple stocks
+# Portfolio Data Includes:
+# - Stock symbol
+# - Quantity
+# - Buy price
+# - Current price
+# - Profit / Loss
 
-# API: Latest news for stock
+# ==================================================
+# API 4: RISK SCORE CALCULATOR
+# ==================================================
 
+# Endpoint:
+# GET /api/risk/<symbol>
 
+# Purpose:
+# Calculates how risky a stock is.
 
-# Step 1: User sends request to backend
+# Inputs Needed:
+# - Stock symbol
+# - Historical price data
+# - Volatility
+# - Moving averages
+# - Trend direction
 
-# Step 2: Backend calls API or database
+# Output (JSON):
+# {
+#   "symbol": "AAPL",
+#   "risk_score": 7,
+#   "risk_level": "High",
+#   "explanation": "High volatility detected"
+# }
 
-# Step 3: Backend processes the data
+# Risk Score Range:
+# 1 = Very Low Risk
+# 10 = Very High Risk
 
-# Step 4: Backend sends response to frontend
+# Possible Errors:
+# - Not enough data
+# - Invalid symbol
+# - Calculation failure
 
-# Step 5: Frontend shows updated data on screen
+# ==================================================
+# API 5: STOCK COMPARISON
+# ==================================================
 
+# Endpoint:
+# POST /api/compare
 
+# Purpose:
+# Compare multiple stocks side-by-side.
 
-# REAL API for live stock price
-@app.route('/api/get_price/<symbol>', methods=['GET'])
-def get_price(symbol):
-    return {"symbol": symbol, "price": 123.45}
+# Input:
+# - List of stock symbols
 
-# -------------------------------
-# STOCK PRICE API - PLANNING NOTES
-# -------------------------------
+# Output:
+# - Prices
+# - Trends
+# - Risk scores
 
-# INPUT:
-# - User sends a stock symbol (e.g., "AAPL", "RELIANCE").
-# - Input arrives via GET request to /api/get_price/<symbol>.
-# - Backend must validate the symbol (check empty, invalid characters).
+# ==================================================
+# API 6: LATEST STOCK NEWS
+# ==================================================
 
-# PROCESS:
-# - Backend forwards the request to a real market data provider OR mock service.
-# - Backend fetches the live price, last updated time, and market status.
-# - Backend formats the data in JSON structure.
+# Endpoint:
+# GET /api/news/<symbol>
 
-# OUTPUT:
-# - Returns JSON object with:
-#       "symbol": given stock symbol
-#       "price": current market price
-#       "timestamp": last update time
-#       "status": "success"
+# Purpose:
+# Fetch latest news related to a stock.
 
-# ERRORS:
-# - If symbol is missing → return error JSON with message "Symbol required".
-# - If symbol is invalid → return error JSON with message "Invalid stock symbol".
-# - If API provider fails → return error JSON with message "Data fetch error".
-# - If unknown server issue → return error JSON with "Internal server error".
+# Output:
+# - News headline
+# - Source
+# - Published time
+# - Short summary
 
-# -----------------------------------------
-# RISK SCORE CALCULATOR API — PLANNING NOTES
-# -----------------------------------------
+# ==================================================
+# IMPORTANT NOTE FOR TEAM
+# ==================================================
 
-# What this API will do:
-# This API will calculate risk score for a stock.
+# This file is ONLY for planning.
+# Real Flask routes and logic will be implemented
+# later in actual backend files (e.g., app.py).
 
-# Inputs needed:
-# Stock symbol, past price data, volatility, moving averages.
-
-# Outputs:
-# A risk score between 1–10 and short explanation text.
-
-# Possible errors:
-# Not enough historical data, API failure, invalid symbol.
-
+# Do NOT write executable code here.
