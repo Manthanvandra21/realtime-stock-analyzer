@@ -135,3 +135,6 @@ risk_meter_placeholder = st.empty()
 # Risk will be calculated using volatility and trends
 # Color indicators will show low, medium, or high risk
 
+st.write("Risk score feature coming soon!")
+st.write("You will soon see stock risk level here.")
+
