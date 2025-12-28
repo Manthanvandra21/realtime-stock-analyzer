@@ -34,149 +34,64 @@ This file helps the team understand:
 # Step 6: Frontend displays data to user
 
 # ==================================================
-# API 1: GET LIVE STOCK PRICE
+# Placeholder Functions for APIs
 # ==================================================
 
-# Endpoint:
-# GET /api/get_price/<symbol>
+def get_price(symbol):
+    """
+    Placeholder for future API to fetch live stock price.
+    Input:
+    - symbol: Stock ticker symbol (string)
+    
+    Output:
+    - JSON with current price, timestamp, status
+    """
+    pass  # To be implemented later
 
-# Purpose:
-# Returns the current market price of a stock.
 
-# Input:
-# - symbol (string): Stock ticker symbol (example: AAPL, TSLA)
+def get_risk(symbol):
+    """
+    Placeholder for future API to calculate stock risk.
+    Input:
+    - symbol: Stock ticker symbol (string)
+    
+    Output:
+    - JSON with risk score, risk level, explanation
+    """
+    pass  # To be implemented later
 
-# Processing Steps:
-# - Validate symbol (not empty, valid format)
-# - Call external market data API
-# - Extract latest price and timestamp
-# - Format response
 
-# Output (JSON):
-# {
-#   "symbol": "AAPL",
-#   "price": 123.45,
-#   "timestamp": "2025-01-01 10:30:00",
-#   "status": "success"
-# }
+def add_to_portfolio(symbol):
+    """
+    Placeholder for API to add a stock to the user's portfolio.
+    Input:
+    - symbol: Stock ticker symbol (string)
+    
+    Output:
+    - JSON with success/failure message
+    """
+    pass  # To be implemented later
 
-# Possible Errors:
-# - Symbol missing
-# - Invalid symbol
-# - External API failure
-# - Internal server error
 
-# ==================================================
-# API 2: GET HISTORICAL STOCK DATA
-# ==================================================
+def remove_from_portfolio(symbol):
+    """
+    Placeholder for API to remove a stock from the user's portfolio.
+    Input:
+    - symbol: Stock ticker symbol (string)
+    
+    Output:
+    - JSON with success/failure message
+    """
+    pass  # To be implemented later
 
-# Endpoint:
-# GET /api/historical/<symbol>
 
-# Purpose:
-# Returns past stock prices for charts and analysis.
-
-# Input:
-# - symbol (string)
-# - optional date range
-
-# Output:
-# - List of prices with dates
-
-# ==================================================
-# API 3: PORTFOLIO MANAGEMENT
-# ==================================================
-
-# API: Add stock to portfolio
-# POST /api/portfolio/add
-
-# API: Remove stock from portfolio
-# POST /api/portfolio/remove
-
-# API: Get portfolio summary
-# GET /api/portfolio
-
-# Portfolio Data Includes:
-# - Stock symbol
-# - Quantity
-# - Buy price
-# - Current price
-# - Profit / Loss
-
-# ==================================================
-# API 4: RISK SCORE CALCULATOR
-# ==================================================
-
-# Endpoint:
-# GET /api/risk/<symbol>
-
-# Purpose:
-# Calculates how risky a stock is.
-
-# Inputs Needed:
-# - Stock symbol
-# - Historical price data
-# - Volatility
-# - Moving averages
-# - Trend direction
-
-# Output (JSON):
-# {
-#   "symbol": "AAPL",
-#   "risk_score": 7,
-#   "risk_level": "High",
-#   "explanation": "High volatility detected"
-# }
-
-# Risk Score Range:
-# 1 = Very Low Risk
-# 10 = Very High Risk
-
-# Possible Errors:
-# - Not enough data
-# - Invalid symbol
-# - Calculation failure
-
-# ==================================================
-# API 5: STOCK COMPARISON
-# ==================================================
-
-# Endpoint:
-# POST /api/compare
-
-# Purpose:
-# Compare multiple stocks side-by-side.
-
-# Input:
-# - List of stock symbols
-
-# Output:
-# - Prices
-# - Trends
-# - Risk scores
-
-# ==================================================
-# API 6: LATEST STOCK NEWS
-# ==================================================
-
-# Endpoint:
-# GET /api/news/<symbol>
-
-# Purpose:
-# Fetch latest news related to a stock.
-
-# Output:
-# - News headline
-# - Source
-# - Published time
-# - Short summary
-
-# ==================================================
-# IMPORTANT NOTE FOR TEAM
-# ==================================================
-
-# This file is ONLY for planning.
-# Real Flask routes and logic will be implemented
-# later in actual backend files (e.g., app.py).
-
-# Do NOT write executable code here.
+def get_news(symbol):
+    """
+    Placeholder for API to fetch latest stock-related news.
+    Input:
+    - symbol: Stock ticker symbol (string)
+    
+    Output:
+    - JSON list of news articles with headline, source, time, summary
+    """
+    pass  # To be implemented later
