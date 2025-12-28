@@ -40,58 +40,43 @@ This file helps the team understand:
 def get_price(symbol):
     """
     Placeholder for future API to fetch live stock price.
-    Input:
-    - symbol: Stock ticker symbol (string)
-    
-    Output:
-    - JSON with current price, timestamp, status
+    Returns dummy JSON for frontend testing.
     """
-    pass  # To be implemented later
+    return {"symbol": symbol, "price": 123.45, "status": "success"}
 
 
 def get_risk(symbol):
     """
     Placeholder for future API to calculate stock risk.
-    Input:
-    - symbol: Stock ticker symbol (string)
-    
-    Output:
-    - JSON with risk score, risk level, explanation
+    Returns dummy JSON for frontend testing.
     """
-    pass  # To be implemented later
+    return {"symbol": symbol, "risk_score": 5, "risk_level": "Moderate", "message": "Coming soon"}
 
 
 def add_to_portfolio(symbol):
     """
     Placeholder for API to add a stock to the user's portfolio.
-    Input:
-    - symbol: Stock ticker symbol (string)
-    
-    Output:
-    - JSON with success/failure message
+    Returns dummy JSON for frontend testing.
     """
-    pass  # To be implemented later
+    return {"symbol": symbol, "status": "added", "message": "Coming soon"}
 
 
 def remove_from_portfolio(symbol):
     """
     Placeholder for API to remove a stock from the user's portfolio.
-    Input:
-    - symbol: Stock ticker symbol (string)
-    
-    Output:
-    - JSON with success/failure message
+    Returns dummy JSON for frontend testing.
     """
-    pass  # To be implemented later
+    return {"symbol": symbol, "status": "removed", "message": "Coming soon"}
 
 
 def get_news(symbol):
     """
     Placeholder for API to fetch latest stock-related news.
-    Input:
-    - symbol: Stock ticker symbol (string)
-    
-    Output:
-    - JSON list of news articles with headline, source, time, summary
+    Returns dummy JSON for frontend testing.
     """
-    pass  # To be implemented later
+    return {
+        "symbol": symbol,
+        "headline": "Sample News Headline",
+        "source": "News API",
+        "summary": "This is a dummy news summary for testing purposes."
+    }
