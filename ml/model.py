@@ -70,6 +70,13 @@ def dummy_risk(symbol):
 def calculate_risk(symbol):
     """
     Dummy ML risk calculation function.
-    Returns a risk score and explanation text.
+    Returns a risk score (1–10) and a short explanation.
     """
-    return 6, "This stock has a medium risk based on dummy evaluation"
+    symbol_length = len(symbol)
+
+    if symbol_length <= 3:
+        return 3, "Low risk based on short symbol stability"
+    elif symbol_length <= 5:
+        return 6, "Medium risk based on moderate symbol volatility"
+    else:
+        return 8, "High risk based on higher dummy volatility"
