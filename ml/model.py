@@ -53,3 +53,13 @@ def calculate_volatility(data):
 # Model needs volume data
 # More data = better prediction
 # Data cleaning is important before training
+
+# ML Model Planning Notes:
+# The model will predict simple stock price trends.
+# It will decide whether the price may go up, go down, or stay neutral.
+# The model will use historical stock prices for learning.
+# Past Open, High, Low, Close, and Volume data will be used.
+# The output of the model will be a simple trend label:
+# Up / Down / Neutral
+# This planning helps keep the ML logic clear for future development.
+
