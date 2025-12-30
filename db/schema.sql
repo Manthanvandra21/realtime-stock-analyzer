@@ -40,3 +40,27 @@ CREATE TABLE IF NOT EXISTS activity_logs_placeholder (
 -- One user can have many stocks
 -- Watchlist belongs to a user
 -- Logs belong to a user and store actions
+
+-- -------------------------------
+-- Simple Table Structure Planning
+-- -------------------------------
+
+-- Users Table
+-- id
+-- username
+-- email
+-- password
+-- created_at
+
+-- Portfolio Table
+-- id
+-- user_id
+-- stock_symbol
+-- quantity
+-- buy_price
+
+-- Stock Prices Table
+-- id
+-- stock_symbol
+-- price
+-- timestamp
