@@ -63,3 +63,5 @@ def calculate_volatility(data):
 # Up / Down / Neutral
 # This planning helps keep the ML logic clear for future development.
 
+def dummy_risk(symbol):
+    return 5, "Moderate risk"
