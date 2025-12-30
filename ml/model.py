@@ -65,3 +65,11 @@ def calculate_volatility(data):
 
 def dummy_risk(symbol):
     return 5, "Moderate risk"
+
+
+def calculate_risk(symbol):
+    """
+    Dummy ML risk calculation function.
+    Returns a risk score and explanation text.
+    """
+    return 6, "This stock has a medium risk based on dummy evaluation"
