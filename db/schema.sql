@@ -88,3 +88,22 @@ CREATE TABLE IF NOT EXISTS stock_history (
     price FLOAT,
     timestamp DATETIME
 );
+
+-- -------------------------------
+-- Sample Test Data for API Testing
+-- -------------------------------
+
+INSERT INTO users (id, name, email) VALUES
+(1, 'Test User One', 'user1@test.com'),
+(2, 'Test User Two', 'user2@test.com');
+
+INSERT INTO portfolio (id, user_id, stock_symbol, quantity) VALUES
+(1, 1, 'AAPL', 10),
+(2, 1, 'GOOGL', 5),
+(3, 2, 'MSFT', 8);
+
+INSERT INTO stock_history (id, symbol, price, timestamp) VALUES
+(1, 'AAPL', 175.50, '2025-11-19 10:00:00'),
+(2, 'AAPL', 176.20, '2025-11-19 11:00:00'),
+(3, 'GOOGL', 2850.75, '2025-11-19 10:00:00'),
+(4, 'MSFT', 410.30, '2025-11-19 10:00:00');
