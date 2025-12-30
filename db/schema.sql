@@ -64,3 +64,27 @@ CREATE TABLE IF NOT EXISTS activity_logs_placeholder (
 -- stock_symbol
 -- price
 -- timestamp
+
+-- -------------------------------
+-- Initial Tables for Testing
+-- -------------------------------
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT,
+    name VARCHAR(100),
+    email VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS portfolio (
+    id INT,
+    user_id INT,
+    stock_symbol VARCHAR(20),
+    quantity INT
+);
+
+CREATE TABLE IF NOT EXISTS stock_history (
+    id INT,
+    symbol VARCHAR(20),
+    price FLOAT,
+    timestamp DATETIME
+);
