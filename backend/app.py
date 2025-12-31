@@ -3,7 +3,10 @@
 from flask import Flask, jsonify
 
 # Import dummy data functions
-from backend.data_fetcher import fetch_price, fetch_news, fetch_risk
+from backend.data_fetcher import fetch_price, fetch_news
+
+# Import ML risk function
+from ml.model import calculate_risk
 
 app = Flask(__name__)
 
@@ -20,8 +23,14 @@ def get_price(symbol):
 
 @app.route("/api/get_risk/<symbol>", methods=["GET"])
 def get_risk(symbol):
-    data = fetch_risk(symbol)
-    return jsonify(data), 200
+    # Call ML risk logic
+    risk_score, explanation = calculate_risk(symbol)
+
+    return jsonify({
+        "symbol": symbol.upper(),
+        "risk_score": risk_score,
+        "explanation": explanation
+    }), 200
 
 
 @app.route("/api/get_news/<symbol>", methods=["GET"])
