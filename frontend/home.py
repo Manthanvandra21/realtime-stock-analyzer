@@ -49,72 +49,64 @@ st.write("---")
 # PRICE DISPLAY AREA
 # -----------------------------------------
 st.subheader("💵 Stock Prices")
+
+# Existing display
 price_display_area = st.empty()
 
-if st.button("Fetch Price"):
-    try:
-        response = requests.get(
-            f"http://127.0.0.1:5000/api/get_price/{stock_search_box}"
-        )
-        price_display_area.write(response.json())
-    except Exception as e:
-        price_display_area.error("Failed to fetch price")
-        price_display_area.write(str(e))
+# Placeholder for future button
+price_button_placeholder = st.empty()
+
+# Placeholder for future extended price details
+price_details_placeholder = st.empty()
 
 # -----------------------------------------
 # TREND & PREDICTION
 # -----------------------------------------
 st.subheader("📈 Trend & Prediction")
+
 trend_prediction_box = st.empty()
+trend_button_placeholder = st.empty()
 
 # -----------------------------------------
 # PORTFOLIO SUMMARY
 # -----------------------------------------
 st.subheader("🗂 Portfolio Summary")
+
 portfolio_summary_box = st.empty()
+portfolio_button_placeholder = st.empty()
+portfolio_table_placeholder = st.empty()
 
 # -----------------------------------------
 # RISK SCORE SECTION
 # -----------------------------------------
 st.subheader("⚠️ Risk Score")
-risk_score_placeholder = st.empty()
 
-if st.button("Check Risk"):
-    try:
-        response = requests.get(
-            f"http://127.0.0.1:5000/api/get_risk/{stock_search_box}"
-        )
-        risk_score_placeholder.write(response.json())
-    except Exception as e:
-        risk_score_placeholder.error("Failed to fetch risk score")
-        risk_score_placeholder.write(str(e))
+risk_score_placeholder = st.empty()
+risk_button_placeholder = st.empty()
+risk_description_placeholder = st.empty()
 
 # -----------------------------------------
 # CHARTS AREA
 # -----------------------------------------
 st.subheader("📊 Charts")
+
 charts_area = st.empty()
+charts_button_placeholder = st.empty()
+charts_controls_placeholder = st.empty()
 
 # -----------------------------------------
-# NEWS SECTION PLACEHOLDER
+# NEWS SECTION
 # -----------------------------------------
 st.subheader("📰 Latest Stock News")
-news_placeholder = st.empty()
 
-if st.button("Load News"):
-    try:
-        response = requests.get(
-            f"http://127.0.0.1:5000/api/get_news/{stock_search_box}"
-        )
-        news_placeholder.write(response.json())
-    except Exception as e:
-        news_placeholder.error("Failed to load news")
-        news_placeholder.write(str(e))
+news_placeholder = st.empty()
+news_button_placeholder = st.empty()
+news_list_placeholder = st.empty()
 
 st.write("---")
 
 # -----------------------------------------
-# BACKEND API TEST SECTION (SAFE VERSION)
+# BACKEND API TEST SECTION (EXISTING)
 # -----------------------------------------
 st.subheader("🧪 Test Stock Price API")
 
@@ -136,7 +128,7 @@ if st.button("Get Price"):
             st.write(str(e))
 
 # -----------------------------------------
-# RISK ANALYSIS PLACEHOLDERS
+# RISK ANALYSIS PLACEHOLDERS (UPCOMING)
 # -----------------------------------------
 st.write("---")
 st.subheader("📊 Stock Risk Analysis (Coming Soon)")
