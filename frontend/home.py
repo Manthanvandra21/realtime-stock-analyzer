@@ -55,13 +55,20 @@ price_button_placeholder = st.empty()
 price_details_placeholder = st.empty()
 
 if price_button_placeholder.button("Fetch Price"):
+    price_display_area.write("Fetching data...")
     try:
         response = requests.get(
             f"http://127.0.0.1:5000/api/get_price/{stock_search_box}"
         )
-        price_display_area.write(response.json())
+        data = response.json()
+
+        price_display_area.subheader("Current Price")
+        price_display_area.write(f"Stock: {data.get('symbol', 'N/A')}")
+        price_display_area.write(f"Price: ₹ {data.get('price', 'N/A')}")
+        price_display_area.write(f"Change: {data.get('change', 'N/A')}%")
+
     except Exception:
-        price_display_area.write("Dummy Price Response from Backend")
+        price_display_area.write("Unable to fetch stock price.")
 
 # -----------------------------------------
 # TREND & PREDICTION
@@ -90,13 +97,21 @@ risk_button_placeholder = st.empty()
 risk_description_placeholder = st.empty()
 
 if risk_button_placeholder.button("Check Risk"):
+    risk_score_placeholder.write("Fetching data...")
     try:
         response = requests.get(
             f"http://127.0.0.1:5000/api/get_risk/{stock_search_box}"
         )
-        risk_score_placeholder.write(response.json())
+        data = response.json()
+
+        risk_score_placeholder.subheader("Risk Analysis")
+        risk_score_placeholder.write(f"Risk Score: {data.get('risk_score', 'N/A')}")
+        risk_description_placeholder.write(
+            data.get("explanation", "Risk explanation will appear here.")
+        )
+
     except Exception:
-        risk_score_placeholder.write("Dummy Risk Score Response from Backend")
+        risk_score_placeholder.write("Unable to fetch risk data.")
 
 # -----------------------------------------
 # CHARTS AREA
@@ -117,13 +132,19 @@ news_button_placeholder = st.empty()
 news_list_placeholder = st.empty()
 
 if news_button_placeholder.button("Load News"):
+    news_placeholder.write("Fetching data...")
     try:
         response = requests.get(
             f"http://127.0.0.1:5000/api/get_news/{stock_search_box}"
         )
-        news_placeholder.write(response.json())
+        data = response.json()
+
+        news_placeholder.subheader("Top Headlines")
+        for item in data.get("news", []):
+            news_placeholder.write(f"• {item}")
+
     except Exception:
-        news_placeholder.write("Dummy News Response from Backend")
+        news_placeholder.write("Unable to load news.")
 
 st.write("---")
 
