@@ -51,3 +51,24 @@ INSERT INTO stock_history (id, symbol, price, timestamp) VALUES
 (2, 'AAPL', 176.20, '2025-11-19 11:00:00'),
 (3, 'GOOGL', 2850.75, '2025-11-19 10:00:00'),
 (4, 'MSFT', 410.30, '2025-11-19 10:00:00');
+
+-- -------------------------------
+-- Risk History Table (Future Use)
+-- -------------------------------
+-- Stores ML-generated risk scores over time
+
+CREATE TABLE IF NOT EXISTS risk_history (
+    id INT,
+    stock_symbol VARCHAR(20),
+    risk_score INT,
+    checked_at DATETIME
+);
+
+-- -------------------------------
+-- Sample Risk History Data
+-- -------------------------------
+
+INSERT INTO risk_history (id, stock_symbol, risk_score, checked_at) VALUES
+(1, 'AAPL', 3, '2025-11-20 09:00:00'),
+(2, 'GOOGL', 6, '2025-11-20 09:05:00'),
+(3, 'MSFT', 5, '2025-11-20 09:10:00');
