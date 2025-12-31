@@ -50,14 +50,18 @@ st.write("---")
 # -----------------------------------------
 st.subheader("💵 Stock Prices")
 
-# Existing display
 price_display_area = st.empty()
-
-# Placeholder for future button
 price_button_placeholder = st.empty()
-
-# Placeholder for future extended price details
 price_details_placeholder = st.empty()
+
+if price_button_placeholder.button("Fetch Price"):
+    try:
+        response = requests.get(
+            f"http://127.0.0.1:5000/api/get_price/{stock_search_box}"
+        )
+        price_display_area.write(response.json())
+    except Exception:
+        price_display_area.write("Dummy Price Response from Backend")
 
 # -----------------------------------------
 # TREND & PREDICTION
@@ -85,6 +89,15 @@ risk_score_placeholder = st.empty()
 risk_button_placeholder = st.empty()
 risk_description_placeholder = st.empty()
 
+if risk_button_placeholder.button("Check Risk"):
+    try:
+        response = requests.get(
+            f"http://127.0.0.1:5000/api/get_risk/{stock_search_box}"
+        )
+        risk_score_placeholder.write(response.json())
+    except Exception:
+        risk_score_placeholder.write("Dummy Risk Score Response from Backend")
+
 # -----------------------------------------
 # CHARTS AREA
 # -----------------------------------------
@@ -102,6 +115,15 @@ st.subheader("📰 Latest Stock News")
 news_placeholder = st.empty()
 news_button_placeholder = st.empty()
 news_list_placeholder = st.empty()
+
+if news_button_placeholder.button("Load News"):
+    try:
+        response = requests.get(
+            f"http://127.0.0.1:5000/api/get_news/{stock_search_box}"
+        )
+        news_placeholder.write(response.json())
+    except Exception:
+        news_placeholder.write("Dummy News Response from Backend")
 
 st.write("---")
 
