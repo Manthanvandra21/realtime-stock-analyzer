@@ -104,11 +104,21 @@ if risk_button_placeholder.button("Check Risk"):
         )
         data = response.json()
 
-        risk_score_placeholder.subheader("Risk Analysis")
-        risk_score_placeholder.write(f"Risk Score: {data.get('risk_score', 'N/A')}")
-        risk_description_placeholder.write(
-            data.get("explanation", "Risk explanation will appear here.")
+        risk_score = data.get("risk_score", "N/A")
+        explanation = data.get("explanation", "No explanation available.")
+
+        # Color logic
+        color = "green"
+        if str(risk_score).lower() == "medium":
+            color = "orange"
+        elif str(risk_score).lower() == "high":
+            color = "red"
+
+        risk_score_placeholder.markdown(
+            f"<h2 style='color:{color}'>Risk Score: {risk_score}</h2>",
+            unsafe_allow_html=True
         )
+        risk_description_placeholder.write(explanation)
 
     except Exception:
         risk_score_placeholder.write("Unable to fetch risk data.")
