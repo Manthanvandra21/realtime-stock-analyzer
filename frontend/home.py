@@ -26,7 +26,6 @@ st.write("---")
 with st.sidebar:
     st.header("📂 Navigation")
 
-    # Sidebar placeholders (no logic yet)
     st.write("• Home")
     st.write("• Portfolio")
     st.write("• Risk Engine")
@@ -52,11 +51,15 @@ st.write("---")
 st.subheader("💵 Stock Prices")
 price_display_area = st.empty()
 
-# Future notes:
-# - Live price
-# - Open, High, Low, Close
-# - Percentage change
-# - Gain/Loss color indicators
+if st.button("Fetch Price"):
+    try:
+        response = requests.get(
+            f"http://127.0.0.1:5000/api/get_price/{stock_search_box}"
+        )
+        price_display_area.write(response.json())
+    except Exception as e:
+        price_display_area.error("Failed to fetch price")
+        price_display_area.write(str(e))
 
 # -----------------------------------------
 # TREND & PREDICTION
@@ -76,6 +79,16 @@ portfolio_summary_box = st.empty()
 st.subheader("⚠️ Risk Score")
 risk_score_placeholder = st.empty()
 
+if st.button("Check Risk"):
+    try:
+        response = requests.get(
+            f"http://127.0.0.1:5000/api/get_risk/{stock_search_box}"
+        )
+        risk_score_placeholder.write(response.json())
+    except Exception as e:
+        risk_score_placeholder.error("Failed to fetch risk score")
+        risk_score_placeholder.write(str(e))
+
 # -----------------------------------------
 # CHARTS AREA
 # -----------------------------------------
@@ -87,6 +100,16 @@ charts_area = st.empty()
 # -----------------------------------------
 st.subheader("📰 Latest Stock News")
 news_placeholder = st.empty()
+
+if st.button("Load News"):
+    try:
+        response = requests.get(
+            f"http://127.0.0.1:5000/api/get_news/{stock_search_box}"
+        )
+        news_placeholder.write(response.json())
+    except Exception as e:
+        news_placeholder.error("Failed to load news")
+        news_placeholder.write(str(e))
 
 st.write("---")
 
