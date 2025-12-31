@@ -1,26 +1,36 @@
 # File: backend/data_fetcher.py
 
-def fetch_live_price(symbol):
+def fetch_price(symbol):
     """
-    Placeholder: Fetches the current live price of a stock.
-    Future implementation will call a real-time market data API.
+    Dummy function to return a fixed stock price.
     """
-    pass
+    return {
+        "symbol": symbol.upper(),
+        "price": 123.45,
+        "currency": "USD"
+    }
 
 
-def fetch_company_details(symbol):
+def fetch_news(symbol):
     """
-    Placeholder: Retrieves basic company information such as name,
-    sector, market cap, and description.
-    Future implementation will use a company info API endpoint.
+    Dummy function to return sample news data.
     """
-    pass
+    return {
+        "symbol": symbol.upper(),
+        "news": [
+            f"{symbol.upper()} stock shows steady performance",
+            f"Analysts remain neutral on {symbol.upper()}",
+            f"{symbol.upper()} sees average trading volume"
+        ]
+    }
 
 
-def fetch_historical_data(symbol, days):
+def fetch_risk(symbol):
     """
-    Placeholder: Fetches historical price data for machine learning models.
-    Future implementation will pull OHLC data for the specified time range.
+    Dummy function to return a sample risk score.
     """
-    pass
-
+    return {
+        "symbol": symbol.upper(),
+        "risk_score": 5,
+        "explanation": "Moderate risk based on dummy evaluation"
+    }
