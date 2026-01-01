@@ -3,7 +3,7 @@
 from flask import Flask, jsonify
 
 # Import dummy data functions
-from data_fetcher import fetch_price, fetch_news
+from backend.data_fetcher import fetch_price, fetch_news
 
 # Import ML risk function
 from ml.model import calculate_risk
