@@ -1,74 +1,75 @@
 -- File: db/schema.sql
 
--- -------------------------------
--- Users Table (Basic Placeholder)
--- -------------------------------
+-- =================================================
+-- USERS TABLE
+-- =================================================
+-- Basic user information (can be expanded later)
 
 CREATE TABLE IF NOT EXISTS users (
-    id INT,
-    name VARCHAR(100),
-    email VARCHAR(100)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE
 );
 
--- -------------------------------
--- Portfolio Table (Future Ready)
--- -------------------------------
+-- Sample Users Data
+INSERT INTO users (name, email) VALUES
+('Test User', 'testuser@email.com');
+
+-- =================================================
+-- PORTFOLIO TABLE
+-- =================================================
 -- Stores user stock holdings
 
 CREATE TABLE IF NOT EXISTS portfolio (
-    id INT,
-    stock_symbol VARCHAR(20),
-    quantity INT,
-    buy_price FLOAT
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    stock_symbol VARCHAR(20) NOT NULL,
+    quantity INT NOT NULL CHECK (quantity > 0),
+    buy_price DECIMAL(10,2) NOT NULL CHECK (buy_price > 0),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- -------------------------------
 -- Sample Portfolio Data
--- -------------------------------
-
-INSERT INTO portfolio (id, stock_symbol, quantity, buy_price) VALUES
+INSERT INTO portfolio (user_id, stock_symbol, quantity, buy_price) VALUES
 (1, 'AAPL', 10, 170.50),
-(2, 'GOOGL', 5, 2800.00),
-(3, 'MSFT', 8, 395.75);
+(1, 'GOOGL', 5, 2800.00),
+(1, 'MSFT', 8, 395.75);
 
--- -------------------------------
--- Stock Price History (Optional)
--- -------------------------------
+-- =================================================
+-- STOCK PRICE HISTORY TABLE
+-- =================================================
+-- Stores historical stock prices
 
 CREATE TABLE IF NOT EXISTS stock_history (
-    id INT,
-    symbol VARCHAR(20),
-    price FLOAT,
-    timestamp DATETIME
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    stock_symbol VARCHAR(20) NOT NULL,
+    price DECIMAL(10,2) NOT NULL CHECK (price > 0),
+    recorded_at DATETIME NOT NULL
 );
 
--- -------------------------------
 -- Sample Stock History Data
--- -------------------------------
+INSERT INTO stock_history (stock_symbol, price, recorded_at) VALUES
+('AAPL', 175.50, '2025-11-19 10:00:00'),
+('AAPL', 176.20, '2025-11-19 11:00:00'),
+('GOOGL', 2850.75, '2025-11-19 10:00:00'),
+('MSFT', 410.30, '2025-11-19 10:00:00');
 
-INSERT INTO stock_history (id, symbol, price, timestamp) VALUES
-(1, 'AAPL', 175.50, '2025-11-19 10:00:00'),
-(2, 'AAPL', 176.20, '2025-11-19 11:00:00'),
-(3, 'GOOGL', 2850.75, '2025-11-19 10:00:00'),
-(4, 'MSFT', 410.30, '2025-11-19 10:00:00');
-
--- -------------------------------
--- Risk History Table (Future Use)
--- -------------------------------
+-- =================================================
+-- RISK HISTORY TABLE
+-- =================================================
 -- Stores ML-generated risk scores over time
 
 CREATE TABLE IF NOT EXISTS risk_history (
-    id INT,
-    stock_symbol VARCHAR(20),
-    risk_score INT,
-    checked_at DATETIME
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    stock_symbol VARCHAR(20) NOT NULL,
+    risk_score INT NOT NULL CHECK (risk_score BETWEEN 1 AND 10),
+    checked_at DATETIME NOT NULL
 );
 
--- -------------------------------
 -- Sample Risk History Data
--- -------------------------------
-
-INSERT INTO risk_history (id, stock_symbol, risk_score, checked_at) VALUES
-(1, 'AAPL', 3, '2025-11-20 09:00:00'),
-(2, 'GOOGL', 6, '2025-11-20 09:05:00'),
-(3, 'MSFT', 5, '2025-11-20 09:10:00');
+INSERT INTO risk_history (stock_symbol, risk_score, checked_at) VALUES
+('AAPL', 3, '2025-11-20 09:00:00'),
+('GOOGL', 6, '2025-11-20 09:05:00'),
+('MSFT', 5, '2025-11-20 09:10:00');
