@@ -1,143 +1,51 @@
--- File: db/schema.sql
--- Purpose:
--- Final database schema for Stock Price Analyzer
--- Verified for production readiness and Day 8+ backend integration
+# File: ml/model.py
+# Purpose:
+# Risk scoring model for Stock Price Analyzer
+# This module performs ONLY risk calculation.
+# It does NOT connect to database or perform logging.
 
--- =================================================
--- USERS TABLE
--- =================================================
--- Purpose:
--- Stores basic user profile data.
--- Backend Auth/User Service will later:
--- - Create users
--- - Authenticate users
--- - Link portfolios to users
+# -------------------------------------------------
+# IMPORTANT FLOW (Future Automation)
+# -------------------------------------------------
+# ML Model → Backend API → Database (risk_history / risk_logs)
+#
+# The ML layer returns only the risk_score (int).
+# Backend is responsible for:
+# - Calling this function
+# - Storing results in DB
+# - Logging responses
+# -------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS users (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(150) NOT NULL UNIQUE
-);
 
--- Sample user for backend testing
-INSERT INTO users (name, email) VALUES
-('Test User', 'testuser@email.com');
+def calculate_risk(price_volatility, market_trend):
+    """
+    Calculate risk score based on market indicators.
 
--- =================================================
--- PORTFOLIO TABLE
--- =================================================
--- Purpose:
--- Stores user stock holdings.
--- Backend Portfolio Service will:
--- - Insert new holdings
--- - Update quantities & prices
--- - Fetch holdings for dashboard
--- API Mapping:
--- /portfolio → portfolio
+    Parameters:
+    price_volatility (float): Volatility value from market data
+    market_trend (str): 'bullish', 'neutral', or 'bearish'
 
-CREATE TABLE IF NOT EXISTS portfolio (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    stock_symbol VARCHAR(20) NOT NULL,
-    quantity INT NOT NULL CHECK (quantity > 0),
-    buy_price DECIMAL(10,2) NOT NULL CHECK (buy_price > 0),
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    Returns:
+    int: risk_score between 1 (low risk) and 10 (high risk)
+    """
 
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
+    # Base risk from volatility
+    if price_volatility < 1:
+        risk_score = 2
+    elif price_volatility < 2:
+        risk_score = 4
+    elif price_volatility < 3:
+        risk_score = 6
+    else:
+        risk_score = 8
 
--- Sample portfolio data
-INSERT INTO portfolio (user_id, stock_symbol, quantity, buy_price) VALUES
-(1, 'AAPL', 10, 170.50),
-(1, 'GOOGL', 5, 2800.00),
-(1, 'MSFT', 8, 395.75);
+    # Adjust risk based on market trend
+    if market_trend == "bearish":
+        risk_score += 1
+    elif market_trend == "bullish":
+        risk_score -= 1
 
--- =================================================
--- STOCK PRICE HISTORY TABLE
--- =================================================
--- Purpose:
--- Stores historical stock prices fetched from market APIs.
--- Backend Market Data Service will:
--- - Insert price snapshots
--- - Use data for charts & analysis
--- API Mapping:
--- /prices/history → stock_history
+    # Ensure risk score stays within expected bounds
+    risk_score = max(1, min(10, risk_score))
 
-CREATE TABLE IF NOT EXISTS stock_history (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    stock_symbol VARCHAR(20) NOT NULL,
-    price DECIMAL(10,2) NOT NULL CHECK (price > 0),
-    recorded_at DATETIME NOT NULL
-);
-
--- Sample historical prices
-INSERT INTO stock_history (stock_symbol, price, recorded_at) VALUES
-('AAPL', 175.50, '2025-11-19 10:00:00'),
-('AAPL', 176.20, '2025-11-19 11:00:00'),
-('GOOGL', 2850.75, '2025-11-19 10:00:00'),
-('MSFT', 410.30, '2025-11-19 10:00:00');
-
--- =================================================
--- RISK HISTORY TABLE
--- =================================================
--- Purpose:
--- Stores ML-generated risk scores per stock.
--- Backend Risk Engine will later:
--- - Insert new risk evaluations
--- - Track risk changes over time
--- - Support dashboards & alerts
--- API Mapping:
--- /risk/analyze → risk_history
---
--- Note:
--- Structure supports frequent inserts without modification.
-
-CREATE TABLE IF NOT EXISTS risk_history (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    stock_symbol VARCHAR(20) NOT NULL,
-    risk_score INT NOT NULL CHECK (risk_score BETWEEN 1 AND 10),
-    checked_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
--- Sample risk scores
-INSERT INTO risk_history (stock_symbol, risk_score, checked_at) VALUES
-('AAPL', 3, '2025-11-20 09:00:00'),
-('GOOGL', 6, '2025-11-20 09:05:00'),
-('MSFT', 5, '2025-11-20 09:10:00');
-
--- =================================================
--- API LOGS TABLE
--- =================================================
--- Purpose:
--- Stores raw responses from external stock APIs.
--- Backend API Layer will:
--- - Log all API responses
--- - Help debugging & monitoring
--- API Mapping:
--- /api/fetch-price → api_logs
-
-CREATE TABLE IF NOT EXISTS api_logs (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    symbol VARCHAR(20) NOT NULL,
-    response TEXT NOT NULL,
-    logged_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
--- =================================================
--- RISK LOGS TABLE
--- =================================================
--- Purpose:
--- Stores AI/ML risk engine responses.
--- Backend Risk Service will:
--- - Log model outputs
--- - Support audits and issue analysis
--- API Mapping:
--- /risk/evaluate → risk_logs
-
-CREATE TABLE IF NOT EXISTS risk_logs (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    symbol VARCHAR(20) NOT NULL,
-    response TEXT NOT NULL,
-    logged_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
+    return risk_score
