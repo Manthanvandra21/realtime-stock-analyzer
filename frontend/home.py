@@ -21,11 +21,10 @@ st.write(
 st.write("---")
 
 # -----------------------------------------
-# SIDEBAR (NAVIGATION & CONTROLS - PLACEHOLDERS)
+# SIDEBAR
 # -----------------------------------------
 with st.sidebar:
     st.header("📂 Navigation")
-
     st.write("• Home")
     st.write("• Portfolio")
     st.write("• Risk Engine")
@@ -38,7 +37,7 @@ with st.sidebar:
     st.write("Time range selector coming soon")
 
 # -----------------------------------------
-# MAIN DASHBOARD LAYOUT
+# STOCK SEARCH
 # -----------------------------------------
 st.subheader("🔍 Stock Search")
 stock_search_box = st.text_input("Enter stock symbol (example: AAPL)")
@@ -46,7 +45,7 @@ stock_search_box = st.text_input("Enter stock symbol (example: AAPL)")
 st.write("---")
 
 # -----------------------------------------
-# PRICE DISPLAY AREA
+# STOCK PRICES
 # -----------------------------------------
 st.subheader("💵 Stock Prices")
 
@@ -79,24 +78,7 @@ if price_button_placeholder.button("Fetch Price"):
             price_display_area.error("Backend not running or unreachable.")
 
 # -----------------------------------------
-# TREND & PREDICTION
-# -----------------------------------------
-st.subheader("📈 Trend & Prediction")
-
-trend_prediction_box = st.empty()
-trend_button_placeholder = st.empty()
-
-# -----------------------------------------
-# PORTFOLIO SUMMARY
-# -----------------------------------------
-st.subheader("🗂 Portfolio Summary")
-
-portfolio_summary_box = st.empty()
-portfolio_button_placeholder = st.empty()
-portfolio_table_placeholder = st.empty()
-
-# -----------------------------------------
-# RISK SCORE SECTION
+# RISK SCORE
 # -----------------------------------------
 st.subheader("⚠️ Risk Score")
 
@@ -125,10 +107,9 @@ if risk_button_placeholder.button("Check Risk"):
                 explanation = data.get("explanation", "No explanation available.")
 
                 color = "green"
-                score_text = str(risk_score).lower()
-                if score_text == "medium":
+                if str(risk_score).lower() == "medium":
                     color = "orange"
-                elif score_text == "high":
+                elif str(risk_score).lower() == "high":
                     color = "red"
 
                 risk_score_placeholder.success("Risk analysis completed")
@@ -142,16 +123,34 @@ if risk_button_placeholder.button("Check Risk"):
             risk_score_placeholder.error("Backend not running or unreachable.")
 
 # -----------------------------------------
-# CHARTS AREA
+# PORTFOLIO (FROM DB)
 # -----------------------------------------
-st.subheader("📊 Charts")
+st.subheader("🗂 Portfolio (From DB)")
 
-charts_area = st.empty()
-charts_button_placeholder = st.empty()
-charts_controls_placeholder = st.empty()
+portfolio_placeholder = st.empty()
+portfolio_button_placeholder = st.empty()
+
+if portfolio_button_placeholder.button("Load Portfolio"):
+    portfolio_placeholder.empty()
+    portfolio_placeholder.info("Loading portfolio data...")
+
+    try:
+        response = requests.get("http://127.0.0.1:5000/api/portfolio")
+        data = response.json()
+
+        if "error" in data:
+            portfolio_placeholder.error(data["error"])
+        elif not data:
+            portfolio_placeholder.warning("Portfolio is empty.")
+        else:
+            portfolio_placeholder.success("Portfolio loaded successfully")
+            portfolio_placeholder.dataframe(data)
+
+    except Exception:
+        portfolio_placeholder.error("Backend not running or unreachable.")
 
 # -----------------------------------------
-# NEWS SECTION
+# NEWS
 # -----------------------------------------
 st.subheader("📰 Latest Stock News")
 
@@ -185,7 +184,7 @@ if news_button_placeholder.button("Load News"):
 st.write("---")
 
 # -----------------------------------------
-# FOOTER NOTES
+# FOOTER
 # -----------------------------------------
 st.write("This project is under active development.")
 st.write("More features will be enabled step by step.")
