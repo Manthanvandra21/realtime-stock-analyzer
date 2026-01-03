@@ -128,9 +128,46 @@ if risk_button_placeholder.button("Check Risk"):
 st.subheader("🗂 Portfolio (From DB)")
 
 portfolio_placeholder = st.empty()
-portfolio_button_placeholder = st.empty()
 
-if portfolio_button_placeholder.button("Load Portfolio"):
+# --- Add to Portfolio Inputs ---
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    portfolio_symbol = st.text_input("Stock Symbol")
+
+with col2:
+    portfolio_quantity = st.number_input("Quantity", min_value=1, step=1)
+
+with col3:
+    portfolio_buy_price = st.number_input("Buy Price", min_value=0.0, step=0.01)
+
+add_portfolio_button = st.button("Add to Portfolio")
+
+if add_portfolio_button:
+    if portfolio_symbol.strip() == "":
+        st.warning("Stock symbol is required.")
+    else:
+        try:
+            response = requests.post(
+                "http://127.0.0.1:5000/api/portfolio/add",
+                json={
+                    "symbol": portfolio_symbol,
+                    "quantity": portfolio_quantity,
+                    "buy_price": portfolio_buy_price
+                }
+            )
+            data = response.json()
+
+            if "error" in data:
+                st.error(data["error"])
+            else:
+                st.success("Stock added to portfolio successfully.")
+
+        except Exception:
+            st.error("Backend not running or unreachable.")
+
+# --- Load Portfolio Button ---
+if st.button("Load Portfolio"):
     portfolio_placeholder.empty()
     portfolio_placeholder.info("Loading portfolio data...")
 
