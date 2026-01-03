@@ -52,23 +52,33 @@ st.subheader("💵 Stock Prices")
 
 price_display_area = st.empty()
 price_button_placeholder = st.empty()
-price_details_placeholder = st.empty()
+
+# Clear old data when symbol changes
+price_display_area.empty()
 
 if price_button_placeholder.button("Fetch Price"):
-    price_display_area.write("Fetching data...")
-    try:
-        response = requests.get(
-            f"http://127.0.0.1:5000/api/get_price/{stock_search_box}"
-        )
-        data = response.json()
+    price_display_area.empty()
 
-        price_display_area.subheader("Current Price")
-        price_display_area.write(f"Stock: {data.get('symbol', 'N/A')}")
-        price_display_area.write(f"Price: ₹ {data.get('price', 'N/A')}")
-        price_display_area.write(f"Change: {data.get('change', 'N/A')}%")
+    if stock_search_box.strip() == "":
+        st.warning("Please enter a stock symbol.")
+    else:
+        price_display_area.info("Fetching stock price...")
+        try:
+            response = requests.get(
+                f"http://127.0.0.1:5000/api/get_price/{stock_search_box}"
+            )
+            data = response.json()
 
-    except Exception:
-        price_display_area.write("Unable to fetch stock price.")
+            if "error" in data:
+                price_display_area.error(data["error"])
+            else:
+                price_display_area.subheader("Current Price")
+                price_display_area.write(f"Stock: {data.get('symbol', 'N/A')}")
+                price_display_area.write(f"Price: ₹ {data.get('price', 'N/A')}")
+                price_display_area.write(f"Change: {data.get('change', 'N/A')}%")
+
+        except Exception:
+            price_display_area.error("Backend not running or unreachable.")
 
 # -----------------------------------------
 # TREND & PREDICTION
@@ -88,44 +98,54 @@ portfolio_button_placeholder = st.empty()
 portfolio_table_placeholder = st.empty()
 
 # -----------------------------------------
-# RISK SCORE SECTION (CONNECTED TO BACKEND)
+# RISK SCORE SECTION
 # -----------------------------------------
 st.subheader("⚠️ Risk Score")
 
 risk_score_placeholder = st.empty()
-risk_button_placeholder = st.empty()
 risk_description_placeholder = st.empty()
+risk_button_placeholder = st.empty()
+
+# Clear old risk data
+risk_score_placeholder.empty()
+risk_description_placeholder.empty()
 
 if risk_button_placeholder.button("Check Risk"):
+    risk_score_placeholder.empty()
+    risk_description_placeholder.empty()
+
     if stock_search_box.strip() == "":
-        risk_score_placeholder.error("Please enter a stock symbol.")
+        st.warning("Please enter a stock symbol.")
     else:
-        risk_score_placeholder.write("Fetching data...")
+        risk_score_placeholder.info("Calculating risk score...")
         try:
             response = requests.get(
                 f"http://127.0.0.1:5000/api/get_risk/{stock_search_box}"
             )
             data = response.json()
 
-            risk_score = data.get("risk_score", "N/A")
-            explanation = data.get(
-                "explanation",
-                "No explanation available."
-            )
+            if "error" in data:
+                risk_score_placeholder.error(data["error"])
+            else:
+                risk_score = data.get("risk_score", "N/A")
+                explanation = data.get(
+                    "explanation",
+                    "No explanation available."
+                )
 
-            color = "green"
-            score_text = str(risk_score).lower()
+                color = "green"
+                score_text = str(risk_score).lower()
 
-            if score_text == "medium":
-                color = "orange"
-            elif score_text == "high":
-                color = "red"
+                if score_text == "medium":
+                    color = "orange"
+                elif score_text == "high":
+                    color = "red"
 
-            risk_score_placeholder.markdown(
-                f"<h1 style='color:{color}'>Risk Score: {risk_score}</h1>",
-                unsafe_allow_html=True
-            )
-            risk_description_placeholder.write(explanation)
+                risk_score_placeholder.markdown(
+                    f"<h1 style='color:{color}'>Risk Score: {risk_score}</h1>",
+                    unsafe_allow_html=True
+                )
+                risk_description_placeholder.write(explanation)
 
         except Exception:
             risk_score_placeholder.error("Backend not running or unreachable.")
@@ -146,65 +166,37 @@ st.subheader("📰 Latest Stock News")
 
 news_placeholder = st.empty()
 news_button_placeholder = st.empty()
-news_list_placeholder = st.empty()
+
+# Clear old news
+news_placeholder.empty()
 
 if news_button_placeholder.button("Load News"):
-    news_placeholder.write("Fetching data...")
-    try:
-        response = requests.get(
-            f"http://127.0.0.1:5000/api/get_news/{stock_search_box}"
-        )
-        data = response.json()
+    news_placeholder.empty()
 
-        news_placeholder.subheader("Top Headlines")
-        for item in data.get("news", []):
-            news_placeholder.write(f"• {item}")
-
-    except Exception:
-        news_placeholder.write("Unable to load news.")
-
-st.write("---")
-
-# -----------------------------------------
-# BACKEND API TEST SECTION (EXISTING)
-# -----------------------------------------
-st.subheader("🧪 Test Stock Price API")
-
-symbol = st.text_input("Enter Stock Symbol for API Test")
-
-if st.button("Get Price"):
-    if symbol.strip() == "":
+    if stock_search_box.strip() == "":
         st.warning("Please enter a stock symbol.")
     else:
+        news_placeholder.info("Loading latest news...")
         try:
             response = requests.get(
-                f"http://127.0.0.1:5000/api/get_price/{symbol}"
+                f"http://127.0.0.1:5000/api/get_news/{stock_search_box}"
             )
             data = response.json()
-            st.success("API Response:")
-            st.write(data)
-        except Exception as e:
-            st.error("Backend not reachable or error occurred.")
-            st.write(str(e))
 
-# -----------------------------------------
-# RISK ANALYSIS PLACEHOLDERS (UPCOMING)
-# -----------------------------------------
+            if "error" in data:
+                news_placeholder.error(data["error"])
+            else:
+                news_placeholder.subheader("Top Headlines")
+                for item in data.get("news", []):
+                    news_placeholder.write(f"• {item}")
+
+        except Exception:
+            news_placeholder.error("Backend not running or unreachable.")
+
 st.write("---")
-st.subheader("📊 Stock Risk Analysis (Coming Soon)")
-
-risk_score_box_placeholder = st.empty()
-risk_explanation_placeholder = st.empty()
-risk_meter_placeholder = st.empty()
-
-st.write(
-    "This section will display the calculated risk score using "
-    "volatility, trends, and moving averages."
-)
 
 # -----------------------------------------
 # FOOTER NOTES
 # -----------------------------------------
-st.write("---")
 st.write("This project is under active development.")
 st.write("More features will be enabled step by step.")
