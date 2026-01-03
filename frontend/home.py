@@ -88,7 +88,7 @@ portfolio_button_placeholder = st.empty()
 portfolio_table_placeholder = st.empty()
 
 # -----------------------------------------
-# RISK SCORE SECTION
+# RISK SCORE SECTION (CONNECTED TO BACKEND)
 # -----------------------------------------
 st.subheader("⚠️ Risk Score")
 
@@ -97,31 +97,38 @@ risk_button_placeholder = st.empty()
 risk_description_placeholder = st.empty()
 
 if risk_button_placeholder.button("Check Risk"):
-    risk_score_placeholder.write("Fetching data...")
-    try:
-        response = requests.get(
-            f"http://127.0.0.1:5000/api/get_risk/{stock_search_box}"
-        )
-        data = response.json()
+    if stock_search_box.strip() == "":
+        risk_score_placeholder.error("Please enter a stock symbol.")
+    else:
+        risk_score_placeholder.write("Fetching data...")
+        try:
+            response = requests.get(
+                f"http://127.0.0.1:5000/api/get_risk/{stock_search_box}"
+            )
+            data = response.json()
 
-        risk_score = data.get("risk_score", "N/A")
-        explanation = data.get("explanation", "No explanation available.")
+            risk_score = data.get("risk_score", "N/A")
+            explanation = data.get(
+                "explanation",
+                "No explanation available."
+            )
 
-        # Color logic
-        color = "green"
-        if str(risk_score).lower() == "medium":
-            color = "orange"
-        elif str(risk_score).lower() == "high":
-            color = "red"
+            color = "green"
+            score_text = str(risk_score).lower()
 
-        risk_score_placeholder.markdown(
-            f"<h2 style='color:{color}'>Risk Score: {risk_score}</h2>",
-            unsafe_allow_html=True
-        )
-        risk_description_placeholder.write(explanation)
+            if score_text == "medium":
+                color = "orange"
+            elif score_text == "high":
+                color = "red"
 
-    except Exception:
-        risk_score_placeholder.write("Unable to fetch risk data.")
+            risk_score_placeholder.markdown(
+                f"<h1 style='color:{color}'>Risk Score: {risk_score}</h1>",
+                unsafe_allow_html=True
+            )
+            risk_description_placeholder.write(explanation)
+
+        except Exception:
+            risk_score_placeholder.error("Backend not running or unreachable.")
 
 # -----------------------------------------
 # CHARTS AREA
