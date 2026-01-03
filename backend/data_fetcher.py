@@ -2,35 +2,39 @@
 
 def fetch_price(symbol):
     """
-    Dummy function to return a fixed stock price.
+    Dummy function to safely return fixed stock price data.
     """
-    return {
-        "symbol": symbol.upper(),
-        "price": 123.45,
-        "currency": "USD"
-    }
+    try:
+        return {
+            "symbol": symbol.upper(),
+            "price": 123.45,
+            "change": 1.25,     # dummy price change
+            "currency": "USD"
+        }
+    except Exception:
+        return {
+            "symbol": symbol,
+            "price": None,
+            "change": None,
+            "currency": "USD"
+        }
 
 
 def fetch_news(symbol):
     """
-    Dummy function to return sample news data.
+    Dummy function to safely return sample news list.
     """
-    return {
-        "symbol": symbol.upper(),
-        "news": [
-            f"{symbol.upper()} stock shows steady performance",
-            f"Analysts remain neutral on {symbol.upper()}",
-            f"{symbol.upper()} sees average trading volume"
-        ]
-    }
-
-
-def fetch_risk(symbol):
-    """
-    Dummy function to return a sample risk score.
-    """
-    return {
-        "symbol": symbol.upper(),
-        "risk_score": 5,
-        "explanation": "Moderate risk based on dummy evaluation"
-    }
+    try:
+        return {
+            "symbol": symbol.upper(),
+            "news": [
+                f"{symbol.upper()} stock shows steady performance",
+                f"Analysts remain neutral on {symbol.upper()}",
+                f"{symbol.upper()} sees average trading volume"
+            ]
+        }
+    except Exception:
+        return {
+            "symbol": symbol,
+            "news": []
+        }
