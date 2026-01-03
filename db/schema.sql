@@ -1,9 +1,16 @@
 -- File: db/schema.sql
+-- Purpose:
+-- Final database schema for Stock Price Analyzer
+-- Prepared for Day 8+ backend & API integration
 
 -- =================================================
 -- USERS TABLE
 -- =================================================
--- Stores basic user information
+-- Purpose:
+-- Stores basic user profile data.
+-- Backend (Auth / User Service) will later:
+-- - Register users
+-- - Link portfolios to users
 
 CREATE TABLE IF NOT EXISTS users (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -11,14 +18,20 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(150) NOT NULL UNIQUE
 );
 
--- Sample Users Data
+-- Sample user for testing backend-user mapping
 INSERT INTO users (name, email) VALUES
 ('Test User', 'testuser@email.com');
 
 -- =================================================
 -- PORTFOLIO TABLE
 -- =================================================
--- Stores user stock holdings
+-- Purpose:
+-- Stores user stock holdings.
+-- Backend Portfolio API will:
+-- - Add / update holdings
+-- - Fetch portfolio for dashboard display
+-- API Mapping:
+-- /portfolio → portfolio table
 
 CREATE TABLE IF NOT EXISTS portfolio (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -31,7 +44,7 @@ CREATE TABLE IF NOT EXISTS portfolio (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- Sample Portfolio Data
+-- Sample portfolio data for UI & calculation testing
 INSERT INTO portfolio (user_id, stock_symbol, quantity, buy_price) VALUES
 (1, 'AAPL', 10, 170.50),
 (1, 'GOOGL', 5, 2800.00),
@@ -40,7 +53,13 @@ INSERT INTO portfolio (user_id, stock_symbol, quantity, buy_price) VALUES
 -- =================================================
 -- STOCK PRICE HISTORY TABLE
 -- =================================================
--- Stores historical stock prices for analysis & charts
+-- Purpose:
+-- Stores historical stock prices.
+-- Backend Market Data API will:
+-- - Save fetched prices
+-- - Feed charts & performance analysis
+-- API Mapping:
+-- /prices/history → stock_history table
 
 CREATE TABLE IF NOT EXISTS stock_history (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -49,7 +68,7 @@ CREATE TABLE IF NOT EXISTS stock_history (
     recorded_at DATETIME NOT NULL
 );
 
--- Sample Stock History Data
+-- Sample historical prices for chart testing
 INSERT INTO stock_history (stock_symbol, price, recorded_at) VALUES
 ('AAPL', 175.50, '2025-11-19 10:00:00'),
 ('AAPL', 176.20, '2025-11-19 11:00:00'),
@@ -59,7 +78,13 @@ INSERT INTO stock_history (stock_symbol, price, recorded_at) VALUES
 -- =================================================
 -- RISK HISTORY TABLE
 -- =================================================
--- Stores ML-generated risk scores over time
+-- Purpose:
+-- Stores ML-generated risk scores over time.
+-- Backend Risk Engine will:
+-- - Store risk evaluation results
+-- - Track risk changes per stock
+-- API Mapping:
+-- /risk/analyze → risk_history table
 
 CREATE TABLE IF NOT EXISTS risk_history (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -68,7 +93,7 @@ CREATE TABLE IF NOT EXISTS risk_history (
     checked_at DATETIME NOT NULL
 );
 
--- Sample Risk History Data
+-- Sample risk scores for testing risk dashboard
 INSERT INTO risk_history (stock_symbol, risk_score, checked_at) VALUES
 ('AAPL', 3, '2025-11-20 09:00:00'),
 ('GOOGL', 6, '2025-11-20 09:05:00'),
@@ -77,7 +102,13 @@ INSERT INTO risk_history (stock_symbol, risk_score, checked_at) VALUES
 -- =================================================
 -- API LOGS TABLE
 -- =================================================
--- Logs external API responses for debugging & monitoring
+-- Purpose:
+-- Stores raw responses from external stock APIs.
+-- Backend API Service will:
+-- - Log request responses
+-- - Help debug API failures
+-- API Mapping:
+-- /api/fetch-price → api_logs table
 
 CREATE TABLE IF NOT EXISTS api_logs (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -89,7 +120,13 @@ CREATE TABLE IF NOT EXISTS api_logs (
 -- =================================================
 -- RISK LOGS TABLE
 -- =================================================
--- Logs AI/ML risk engine responses for audit & tracking
+-- Purpose:
+-- Stores AI/ML risk engine responses.
+-- Backend Risk Service will:
+-- - Log model outputs
+-- - Support audits & troubleshooting
+-- API Mapping:
+-- /risk/evaluate → risk_logs table
 
 CREATE TABLE IF NOT EXISTS risk_logs (
     id INT PRIMARY KEY AUTO_INCREMENT,
