@@ -3,7 +3,7 @@
 -- =================================================
 -- USERS TABLE
 -- =================================================
--- Basic user information (can be expanded later)
+-- Stores basic user information
 
 CREATE TABLE IF NOT EXISTS users (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -40,7 +40,7 @@ INSERT INTO portfolio (user_id, stock_symbol, quantity, buy_price) VALUES
 -- =================================================
 -- STOCK PRICE HISTORY TABLE
 -- =================================================
--- Stores historical stock prices
+-- Stores historical stock prices for analysis & charts
 
 CREATE TABLE IF NOT EXISTS stock_history (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -73,3 +73,27 @@ INSERT INTO risk_history (stock_symbol, risk_score, checked_at) VALUES
 ('AAPL', 3, '2025-11-20 09:00:00'),
 ('GOOGL', 6, '2025-11-20 09:05:00'),
 ('MSFT', 5, '2025-11-20 09:10:00');
+
+-- =================================================
+-- API LOGS TABLE
+-- =================================================
+-- Logs external API responses for debugging & monitoring
+
+CREATE TABLE IF NOT EXISTS api_logs (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    symbol VARCHAR(20) NOT NULL,
+    response TEXT NOT NULL,
+    logged_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =================================================
+-- RISK LOGS TABLE
+-- =================================================
+-- Logs AI/ML risk engine responses for audit & tracking
+
+CREATE TABLE IF NOT EXISTS risk_logs (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    symbol VARCHAR(20) NOT NULL,
+    response TEXT NOT NULL,
+    logged_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
