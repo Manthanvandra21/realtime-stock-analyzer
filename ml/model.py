@@ -13,6 +13,7 @@
 # Will use machine learning models trained on historical market data
 # to forecast upcoming stock trends and momentum shifts.
 
+
 def clean_data(data):
     """
     Placeholder: Cleans raw stock market data.
@@ -39,62 +40,65 @@ def calculate_volatility(data):
     """
     pass
 
-# Here we will clean data
-# Here we will do prediction using linear method
-# Here we will do prediction using AR method
-# Here we will pick best method
 
-# To train the model, we need old price data
-# Model will learn patterns from past data
-# We will check accuracy later
-# Better accuracy = better predictions
-
-# Model needs Open, High, Low, Close prices
-# Model needs volume data
-# More data = better prediction
-# Data cleaning is important before training
-
-# ML Model Planning Notes:
-# The model will predict simple stock price trends.
-# It will decide whether the price may go up, go down, or stay neutral.
-# The model will use historical stock prices for learning.
-# Past Open, High, Low, Close, and Volume data will be used.
-# The output of the model will be a simple trend label:
-# Up / Down / Neutral
-# This planning helps keep the ML logic clear for future development.
-
-def dummy_risk(symbol):
-    return 5, "Moderate risk"
+# --------------------------------------------------
+# ML PLANNING & DESIGN NOTES
+# --------------------------------------------------
+# - Data will be cleaned first
+# - Multiple prediction methods will be tested
+# - Best method will be selected based on accuracy
+# - Uses OHLC + Volume data
+# - Better data → better predictions
+# - Current logic is deterministic and safe
+# --------------------------------------------------
 
 
 def calculate_risk(symbol):
     """
     Calculates a deterministic dummy risk score for a stock symbol.
 
-    Returns:
-    - risk_score (int)
-    - explanation (str)
+    What it does:
+    - Uses rule-based logic (NO real ML, NO randomness)
+    - Safe for backend integration and testing
+
+    What it returns:
+    - risk_score (int only)
+
+    IMPORTANT:
+    - Backend will handle formatting, explanation, and DB storage
+    - ML → Backend → Database (future automation flow)
     """
+
+    # Empty symbol → lowest risk to prevent crashes
     if not symbol:
-        return 1, "Very low risk due to empty symbol input"
+        return 1
 
     length = len(symbol)
 
+    # Short symbols → Low risk
+    # Reason: assumed stability (dummy logic)
     if length <= 3:
-        return 3, "Low risk based on short symbol length"
+        return 3
+
+    # Medium symbols → Medium risk
+    # Reason: moderate assumed volatility
     elif length <= 5:
-        return 6, "Medium risk based on average symbol length"
+        return 6
+
+    # Long symbols → High risk
+    # Reason: higher assumed dummy volatility
     else:
-        return 8, "High risk based on long symbol length"
+        return 8
 
 
 def format_risk_output(symbol, risk_score, explanation):
     """
     Formats ML risk output into a structured dictionary.
 
-    What it does:
-    - Converts raw risk score into a readable risk level
-    - Packages symbol, score, level, and explanation together
+    NOTE:
+    - This function is reusable
+    - Backend may call this before saving to DB
+    - ML layer itself does NOT save or log anything
 
     Returns:
     {
