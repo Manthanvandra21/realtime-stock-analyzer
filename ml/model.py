@@ -71,36 +71,49 @@ def calculate_risk(symbol):
     """
     Calculates a deterministic dummy risk score for a stock symbol.
 
-    What it does:
-    - Uses simple, rule-based logic to assign a risk level.
-    - Does NOT use real market data or machine learning models.
-    - Designed only for safe backend and frontend testing.
-
-    What it returns:
-    - risk_score (int): A number between 1 and 10.
-    - explanation (str): Human-readable reason for the risk score.
-
-    Behavior notes:
-    - Same input symbol will always return the same output.
-    - Empty symbol is treated as lowest risk to avoid errors.
+    Returns:
+    - risk_score (int)
+    - explanation (str)
     """
-    # Handle empty symbol input safely
     if not symbol:
         return 1, "Very low risk due to empty symbol input"
 
     length = len(symbol)
 
-    # Short symbols are treated as low risk
-    # Reason: fewer characters → assumed stability (dummy logic)
     if length <= 3:
         return 3, "Low risk based on short symbol length"
-
-    # Medium-length symbols are treated as medium risk
-    # Reason: average length → moderate dummy volatility
     elif length <= 5:
         return 6, "Medium risk based on average symbol length"
-
-    # Long symbols are treated as high risk
-    # Reason: longer symbols → higher assumed dummy volatility
     else:
         return 8, "High risk based on long symbol length"
+
+
+def format_risk_output(symbol, risk_score, explanation):
+    """
+    Formats ML risk output into a structured dictionary.
+
+    What it does:
+    - Converts raw risk score into a readable risk level
+    - Packages symbol, score, level, and explanation together
+
+    Returns:
+    {
+        "symbol": str,
+        "risk_score": int,
+        "risk_level": str,
+        "explanation": str
+    }
+    """
+    if risk_score <= 3:
+        risk_level = "Low"
+    elif risk_score <= 6:
+        risk_level = "Medium"
+    else:
+        risk_level = "High"
+
+    return {
+        "symbol": symbol,
+        "risk_score": risk_score,
+        "risk_level": risk_level,
+        "explanation": explanation
+    }
