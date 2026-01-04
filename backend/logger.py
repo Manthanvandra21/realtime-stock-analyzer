@@ -18,4 +18,4 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger("backend_logger")
-
+logger.propagate = False
