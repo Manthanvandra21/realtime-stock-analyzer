@@ -7,9 +7,7 @@ DB_PATH = "backend/database.db"
 
 
 def get_db_connection():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+    return sqlite3.connect(DB_PATH)
 
 
 # -------------------------
@@ -17,6 +15,7 @@ def get_db_connection():
 # -------------------------
 def get_portfolio():
     conn = get_db_connection()
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM portfolio")
@@ -28,6 +27,7 @@ def get_portfolio():
 
 def get_risk_history(symbol):
     conn = get_db_connection()
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
     cursor.execute(
