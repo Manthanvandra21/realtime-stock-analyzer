@@ -57,21 +57,31 @@ def calculate_risk(symbol):
     """
     Calculates a deterministic dummy risk score for a stock symbol.
 
-    What it does:
-    - Uses rule-based logic (NO real ML, NO randomness)
-    - Safe for backend integration and testing
+    IMPORTANT SAFETY NOTES:
+    - Input validation is required because ML functions may receive
+      empty, null, or malformed input from frontend or APIs.
+    - This function MUST never throw an error.
+    - Safe defaults prevent backend crashes.
 
-    What it returns:
+    Returns:
     - risk_score (int only)
 
-    IMPORTANT:
-    - Backend will handle formatting, explanation, and DB storage
-    - ML → Backend → Database (future automation flow)
+    Future flow:
+    ML → Backend → Database
     """
 
-    # Empty symbol → lowest risk to prevent crashes
-    if not symbol:
-        return 1
+    # -------------------------------
+    # Input validation (critical)
+    # -------------------------------
+    # If symbol is None, empty, or not a string,
+    # return lowest safe risk to protect backend
+    if not symbol or not isinstance(symbol, str):
+        return 1  # Default low risk for invalid input
+
+    symbol = symbol.strip()
+
+    if symbol == "":
+        return 1  # Empty after trimming → safe default
 
     length = len(symbol)
 
@@ -95,10 +105,9 @@ def format_risk_output(symbol, risk_score, explanation):
     """
     Formats ML risk output into a structured dictionary.
 
-    NOTE:
-    - This function is reusable
-    - Backend may call this before saving to DB
-    - ML layer itself does NOT save or log anything
+    Safety:
+    - Assumes backend may pass validated or fallback values
+    - No side effects (no DB, no logging)
 
     Returns:
     {
@@ -108,6 +117,8 @@ def format_risk_output(symbol, risk_score, explanation):
         "explanation": str
     }
     """
+
+    # Risk level mapping kept deterministic
     if risk_score <= 3:
         risk_level = "Low"
     elif risk_score <= 6:
@@ -116,7 +127,7 @@ def format_risk_output(symbol, risk_score, explanation):
         risk_level = "High"
 
     return {
-        "symbol": symbol,
+        "symbol": symbol or "",
         "risk_score": risk_score,
         "risk_level": risk_level,
         "explanation": explanation
