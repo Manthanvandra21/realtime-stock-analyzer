@@ -1,20 +1,21 @@
 # File: backend/db.py
 
 import sqlite3
+from backend.logger import logger
 
 DB_PATH = "backend/database.db"
 
 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row  # enables dict-like rows
+    conn.row_factory = sqlite3.Row
     return conn
 
 
+# -------------------------
+# READ OPERATIONS
+# -------------------------
 def get_portfolio():
-    """
-    Reads all portfolio rows from DB
-    """
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -26,9 +27,6 @@ def get_portfolio():
 
 
 def get_risk_history(symbol):
-    """
-    Reads risk history for a specific stock symbol
-    """
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -41,3 +39,47 @@ def get_risk_history(symbol):
     conn.close()
     return [dict(row) for row in rows]
 
+
+# -------------------------
+# WRITE OPERATIONS
+# -------------------------
+def add_to_portfolio(symbol, qty, price):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "INSERT INTO portfolio (symbol, quantity, buy_price) VALUES (?, ?, ?)",
+            (symbol, qty, price)
+        )
+
+        conn.commit()
+        conn.close()
+
+        logger.info(f"DB WRITE SUCCESS | portfolio | {symbol}")
+        return True
+
+    except Exception as e:
+        logger.error(f"DB WRITE FAILED | portfolio | {symbol} | {e}")
+        return False
+
+
+def save_risk(symbol, risk_score):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "INSERT INTO risk_history (symbol, risk_score) VALUES (?, ?)",
+            (symbol, risk_score)
+        )
+
+        conn.commit()
+        conn.close()
+
+        logger.info(f"DB WRITE SUCCESS | risk_history | {symbol}")
+        return True
+
+    except Exception as e:
+        logger.error(f"DB WRITE FAILED | risk_history | {symbol} | {e}")
+        return False
