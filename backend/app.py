@@ -16,23 +16,28 @@ app = Flask(__name__)
 
 
 # -------------------------
+# Global Error Handler
+# -------------------------
+@app.errorhandler(Exception)
+def handle_global_error(error):
+    logger.error(f"UNHANDLED ERROR | {error}")
+    return jsonify({"error": "Internal server error"}), 500
+
+
+# -------------------------
+# Validation Helper
+# -------------------------
+def is_valid_symbol(symbol):
+    return isinstance(symbol, str) and symbol.strip() != ""
+
+
+# -------------------------
 # Root route
 # -------------------------
 @app.route("/", methods=["GET"])
 def root():
     logger.info("API HIT | /")
-    return jsonify({
-        "status": "Backend running",
-        "apis": [
-            "get_price",
-            "get_risk",
-            "get_news",
-            "portfolio",
-            "risk_history",
-            "portfolio_add",
-            "risk_save"
-        ]
-    }), 200
+    return jsonify({"status": "Backend running"}), 200
 
 
 @app.route("/health", methods=["GET"])
@@ -48,14 +53,15 @@ def health():
 def get_price(symbol):
     logger.info(f"API HIT | get_price | {symbol}")
 
+    if not is_valid_symbol(symbol):
+        return jsonify({"error": "Invalid stock symbol"}), 400
+
     try:
-        if not symbol or not symbol.strip():
-            return jsonify({"error": "Stock symbol is required"}), 400
-
         symbol = symbol.upper()
-        data = fetch_price(symbol)
-
-        return jsonify({"symbol": symbol, "data": data}), 200
+        return jsonify({
+            "symbol": symbol,
+            "data": fetch_price(symbol)
+        }), 200
 
     except Exception as e:
         logger.error(f"PRICE FETCH FAILED | {symbol} | {e}")
@@ -69,10 +75,10 @@ def get_price(symbol):
 def get_risk(symbol):
     logger.info(f"API HIT | get_risk | {symbol}")
 
-    try:
-        if not symbol or not symbol.strip():
-            return jsonify({"error": "Stock symbol is required"}), 400
+    if not is_valid_symbol(symbol):
+        return jsonify({"error": "Invalid stock symbol"}), 400
 
+    try:
         symbol = symbol.upper()
         risk_score, explanation = calculate_risk(symbol)
 
@@ -94,14 +100,15 @@ def get_risk(symbol):
 def get_news(symbol):
     logger.info(f"API HIT | get_news | {symbol}")
 
+    if not is_valid_symbol(symbol):
+        return jsonify({"error": "Invalid stock symbol"}), 400
+
     try:
-        if not symbol or not symbol.strip():
-            return jsonify({"error": "Stock symbol is required"}), 400
-
         symbol = symbol.upper()
-        data = fetch_news(symbol)
-
-        return jsonify({"symbol": symbol, "data": data}), 200
+        return jsonify({
+            "symbol": symbol,
+            "data": fetch_news(symbol)
+        }), 200
 
     except Exception as e:
         logger.error(f"NEWS FETCH FAILED | {symbol} | {e}")
@@ -131,10 +138,10 @@ def portfolio():
 def risk_history(symbol):
     logger.info(f"API HIT | GET /api/risk_history/{symbol}")
 
-    try:
-        if not symbol or not symbol.strip():
-            return jsonify({"error": "Stock symbol is required"}), 400
+    if not is_valid_symbol(symbol):
+        return jsonify({"error": "Invalid stock symbol"}), 400
 
+    try:
         symbol = symbol.upper()
         data = get_risk_history(symbol)
 
@@ -156,8 +163,7 @@ def risk_history(symbol):
 def portfolio_add():
     logger.info("API HIT | POST /api/portfolio/add")
 
-    data = request.get_json()
-
+    data = request.get_json(silent=True)
     if not data:
         return jsonify({"error": "Invalid JSON body"}), 400
 
@@ -165,18 +171,24 @@ def portfolio_add():
     quantity = data.get("quantity")
     price = data.get("price")
 
-    if not symbol or quantity is None or price is None:
-        logger.warning("VALIDATION FAILED | portfolio add")
-        return jsonify({"error": "symbol, quantity and price are required"}), 400
+    if not is_valid_symbol(symbol):
+        return jsonify({"error": "Invalid stock symbol"}), 400
 
-    success = add_to_portfolio(symbol.upper(), quantity, price)
+    if not isinstance(quantity, int) or not isinstance(price, (int, float)):
+        return jsonify({"error": "Invalid quantity or price"}), 400
 
-    if success:
+    try:
+        success = add_to_portfolio(symbol.upper(), quantity, price)
+        if not success:
+            logger.error(f"PORTFOLIO ADD FAILED | {symbol}")
+            return jsonify({"error": "Database write failed"}), 500
+
         logger.info(f"PORTFOLIO ADD SUCCESS | {symbol}")
         return jsonify({"message": "Stock added to portfolio"}), 201
 
-    logger.error(f"PORTFOLIO ADD FAILED | {symbol}")
-    return jsonify({"error": "Failed to write to database"}), 500
+    except Exception as e:
+        logger.error(f"PORTFOLIO ADD ERROR | {symbol} | {e}")
+        return jsonify({"error": "Database error"}), 500
 
 
 # -------------------------
@@ -186,26 +198,31 @@ def portfolio_add():
 def risk_save():
     logger.info("API HIT | POST /api/risk/save")
 
-    data = request.get_json()
-
+    data = request.get_json(silent=True)
     if not data:
         return jsonify({"error": "Invalid JSON body"}), 400
 
     symbol = data.get("symbol")
     risk_score = data.get("risk_score")
 
-    if not symbol or risk_score is None:
-        logger.warning("VALIDATION FAILED | risk save")
-        return jsonify({"error": "symbol and risk_score are required"}), 400
+    if not is_valid_symbol(symbol):
+        return jsonify({"error": "Invalid stock symbol"}), 400
 
-    success = save_risk(symbol.upper(), risk_score)
+    if not isinstance(risk_score, (int, float)):
+        return jsonify({"error": "Invalid risk_score"}), 400
 
-    if success:
+    try:
+        success = save_risk(symbol.upper(), risk_score)
+        if not success:
+            logger.error(f"RISK SAVE FAILED | {symbol}")
+            return jsonify({"error": "Database write failed"}), 500
+
         logger.info(f"RISK SAVE SUCCESS | {symbol}")
         return jsonify({"message": "Risk saved"}), 201
 
-    logger.error(f"RISK SAVE FAILED | {symbol}")
-    return jsonify({"error": "Failed to write to database"}), 500
+    except Exception as e:
+        logger.error(f"RISK SAVE ERROR | {symbol} | {e}")
+        return jsonify({"error": "Database error"}), 500
 
 
 if __name__ == "__main__":
