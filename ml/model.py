@@ -1,82 +1,76 @@
-# File: ml/model.py
+# File: frontend/home.py
 
-# Placeholder for AI trend prediction model
-# Future implementation will analyze historical stock data,
-# compute technical indicators, and use ML algorithms
-# to predict short-term and long-term price trends.
+import streamlit as st
+import requests
 
-# Placeholder: Risk Evaluation Module
-# Will calculate volatility, beta, moving averages, and detect sudden
-# price movements to generate stock risk ratings.
+st.title("Real-Time Stock Analyzer")
 
-# Placeholder: Trend Prediction Module
-# Will use machine learning models trained on historical market data
-# to forecast upcoming stock trends and momentum shifts.
+# Input
+symbol = st.text_input("Enter Stock Symbol")
 
-def clean_data(data):
-    """
-    Placeholder: Cleans raw stock market data.
-    Future implementation will handle missing values, outliers,
-    and normalization.
-    """
-    pass
+# Clear old data when symbol changes
+if "last_symbol" not in st.session_state:
+    st.session_state.last_symbol = ""
 
+if symbol != st.session_state.last_symbol:
+    st.session_state.price = None
+    st.session_state.risk = None
+    st.session_state.news = None
+    st.session_state.last_symbol = symbol
 
-def prepare_training_data(data):
-    """
-    Placeholder: Prepares processed data for ML model training.
-    Future implementation will create feature sets and labels
-    from historical stock patterns.
-    """
-    pass
-
-
-def calculate_volatility(data):
-    """
-    Placeholder: Calculates stock price volatility.
-    Future implementation will derive volatility metrics from
-    historical price fluctuations.
-    """
-    pass
-
-# Here we will clean data
-# Here we will do prediction using linear method
-# Here we will do prediction using AR method
-# Here we will pick best method
-
-# To train the model, we need old price data
-# Model will learn patterns from past data
-# We will check accuracy later
-# Better accuracy = better predictions
-
-# Model needs Open, High, Low, Close prices
-# Model needs volume data
-# More data = better prediction
-# Data cleaning is important before training
-
-# ML Model Planning Notes:
-# The model will predict simple stock price trends.
-# It will decide whether the price may go up, go down, or stay neutral.
-# The model will use historical stock prices for learning.
-# Past Open, High, Low, Close, and Volume data will be used.
-# The output of the model will be a simple trend label:
-# Up / Down / Neutral
-# This planning helps keep the ML logic clear for future development.
-
-def dummy_risk(symbol):
-    return 5, "Moderate risk"
-
-
-def calculate_risk(symbol):
-    """
-    Final dummy ML risk calculation.
-    Returns risk_score (1–10) and explanation text.
-    """
-    length = len(symbol)
-
-    if length <= 3:
-        return 3, "Low risk based on short symbol"
-    elif length <= 5:
-        return 6, "Medium risk based on average symbol length"
+# Fetch Price
+if st.button("Fetch Price"):
+    if not symbol:
+        st.warning("Please enter a stock symbol")
     else:
-        return 8, "High risk based on long symbol length"
+        with st.spinner("Fetching price..."):
+            try:
+                response = requests.get(f"http://localhost:5000/price/{symbol}")
+                data = response.json()
+                if "error" in data:
+                    st.error(data["error"])
+                else:
+                    st.session_state.price = data
+            except Exception:
+                st.error("Failed to fetch price")
+
+if st.session_state.get("price"):
+    st.success(f"Price Data: {st.session_state.price}")
+
+# Check Risk
+if st.button("Check Risk"):
+    if not symbol:
+        st.warning("Please enter a stock symbol")
+    else:
+        with st.spinner("Calculating risk..."):
+            try:
+                response = requests.get(f"http://localhost:5000/risk/{symbol}")
+                data = response.json()
+                if "error" in data:
+                    st.error(data["error"])
+                else:
+                    st.session_state.risk = data
+            except Exception:
+                st.error("Failed to calculate risk")
+
+if st.session_state.get("risk"):
+    st.success(f"Risk Info: {st.session_state.risk}")
+
+# Load News
+if st.button("Load News"):
+    if not symbol:
+        st.warning("Please enter a stock symbol")
+    else:
+        with st.spinner("Loading news..."):
+            try:
+                response = requests.get(f"http://localhost:5000/news/{symbol}")
+                data = response.json()
+                if "error" in data:
+                    st.error(data["error"])
+                else:
+                    st.session_state.news = data
+            except Exception:
+                st.error("Failed to load news")
+
+if st.session_state.get("news"):
+    st.success(f"News: {st.session_state.news}")
