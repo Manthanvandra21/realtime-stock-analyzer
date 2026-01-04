@@ -4,25 +4,30 @@ from flask import Flask, jsonify
 
 from backend.data_fetcher import fetch_price, fetch_news
 from ml.model import calculate_risk
+from backend.db import get_portfolio, get_risk_history
 
 app = Flask(__name__)
 
 
 # -------------------------
-# Root route (demo ready)
+# Root route
 # -------------------------
 @app.route("/", methods=["GET"])
 def root():
-    print("[INFO] Root endpoint called")
     return jsonify({
         "status": "Backend running",
-        "apis": ["get_price", "get_risk", "get_news"]
+        "apis": [
+            "get_price",
+            "get_risk",
+            "get_news",
+            "portfolio",
+            "risk_history"
+        ]
     }), 200
 
 
 @app.route("/health", methods=["GET"])
 def health():
-    print("[INFO] Health check called")
     return jsonify({"status": "ok"}), 200
 
 
@@ -31,14 +36,9 @@ def health():
 # -------------------------
 @app.route("/api/get_price/<symbol>", methods=["GET"])
 def get_price(symbol):
-    print(f"[INFO] get_price API called with symbol: {symbol}")
-
     try:
         if not symbol or not symbol.strip():
-            return jsonify({
-                "symbol": "",
-                "error": "Stock symbol is required"
-            }), 400
+            return jsonify({"error": "Stock symbol is required"}), 400
 
         symbol = symbol.upper()
         data = fetch_price(symbol)
@@ -49,29 +49,19 @@ def get_price(symbol):
         }), 200
 
     except Exception:
-        return jsonify({
-            "symbol": symbol.upper() if symbol else "",
-            "error": "Failed to fetch price data"
-        }), 500
+        return jsonify({"error": "Failed to fetch price data"}), 500
 
 
 # -------------------------
-# Risk API (ML connected)
+# Risk API (ML)
 # -------------------------
 @app.route("/api/get_risk/<symbol>", methods=["GET"])
 def get_risk(symbol):
-    print(f"[INFO] get_risk API called with symbol: {symbol}")
-
     try:
         if not symbol or not symbol.strip():
-            return jsonify({
-                "symbol": "",
-                "error": "Stock symbol is required"
-            }), 400
+            return jsonify({"error": "Stock symbol is required"}), 400
 
         symbol = symbol.upper()
-        print("[INFO] Triggering ML risk calculation")
-
         risk_score, explanation = calculate_risk(symbol)
 
         return jsonify({
@@ -81,10 +71,7 @@ def get_risk(symbol):
         }), 200
 
     except Exception:
-        return jsonify({
-            "symbol": symbol.upper() if symbol else "",
-            "error": "Failed to calculate risk score"
-        }), 500
+        return jsonify({"error": "Failed to calculate risk score"}), 500
 
 
 # -------------------------
@@ -92,14 +79,9 @@ def get_risk(symbol):
 # -------------------------
 @app.route("/api/get_news/<symbol>", methods=["GET"])
 def get_news(symbol):
-    print(f"[INFO] get_news API called with symbol: {symbol}")
-
     try:
         if not symbol or not symbol.strip():
-            return jsonify({
-                "symbol": "",
-                "error": "Stock symbol is required"
-            }), 400
+            return jsonify({"error": "Stock symbol is required"}), 400
 
         symbol = symbol.upper()
         data = fetch_news(symbol)
@@ -110,12 +92,46 @@ def get_news(symbol):
         }), 200
 
     except Exception:
+        return jsonify({"error": "Failed to fetch news data"}), 500
+
+
+# -------------------------
+# Portfolio API (DB READ)
+# -------------------------
+@app.route("/api/portfolio", methods=["GET"])
+def portfolio():
+    try:
+        data = get_portfolio()
         return jsonify({
-            "symbol": symbol.upper() if symbol else "",
-            "error": "Failed to fetch news data"
-        }), 500
+            "count": len(data),
+            "data": data
+        }), 200
+
+    except Exception:
+        return jsonify({"error": "Failed to fetch portfolio"}), 500
+
+
+# -------------------------
+# Risk History API (DB READ)
+# -------------------------
+@app.route("/api/risk_history/<symbol>", methods=["GET"])
+def risk_history(symbol):
+    try:
+        if not symbol or not symbol.strip():
+            return jsonify({"error": "Stock symbol is required"}), 400
+
+        symbol = symbol.upper()
+        data = get_risk_history(symbol)
+
+        return jsonify({
+            "symbol": symbol,
+            "count": len(data),
+            "data": data
+        }), 200
+
+    except Exception:
+        return jsonify({"error": "Failed to fetch risk history"}), 500
 
 
 if __name__ == "__main__":
-    print("[INFO] Starting backend server")
     app.run(debug=True)
