@@ -53,22 +53,21 @@ def calculate_volatility(data):
 # --------------------------------------------------
 
 
+# File: ml/model.py
+
 def calculate_risk(symbol):
-    """
-    Calculates a deterministic dummy risk score for a stock symbol.
+    if not symbol or not isinstance(symbol, str):
+        return 1
 
-    IMPORTANT SAFETY NOTES:
-    - Input validation is required because ML functions may receive
-      empty, null, or malformed input from frontend or APIs.
-    - This function MUST never throw an error.
-    - Safe defaults prevent backend crashes.
+    length = len(symbol.strip())
 
-    Returns:
-    - risk_score (int only)
+    if length <= 3:
+        return 3
+    elif length <= 5:
+        return 6
+    else:
+        return 8
 
-    Future flow:
-    ML → Backend → Database
-    """
 
     # -------------------------------
     # Input validation (critical)
