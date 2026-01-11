@@ -2,15 +2,15 @@
 
 from flask import Flask, jsonify, request
 
-from backend.data_fetcher import fetch_price, fetch_news
-from ml.model import calculate_risk
-from backend.db import (
+from data_fetcher import fetch_price, fetch_news
+from db import (
     get_portfolio,
     get_risk_history,
     add_to_portfolio,
     save_risk
 )
-from backend.logger import logger
+from logger import logger
+from ml.model import calculate_risk
 
 app = Flask(__name__)
 
@@ -58,10 +58,7 @@ def get_price(symbol):
 
     try:
         symbol = symbol.upper()
-        return jsonify({
-            "symbol": symbol,
-            "data": fetch_price(symbol)
-        }), 200
+        return jsonify(fetch_price(symbol)), 200
 
     except Exception as e:
         logger.error(f"PRICE FETCH FAILED | {symbol} | {e}")
@@ -80,12 +77,12 @@ def get_risk(symbol):
 
     try:
         symbol = symbol.upper()
-        risk_score, explanation = calculate_risk(symbol)
+        risk_score = calculate_risk(symbol)
 
         return jsonify({
             "symbol": symbol,
             "risk_score": risk_score,
-            "explanation": explanation
+            "explanation": "Deterministic dummy risk based on symbol length"
         }), 200
 
     except Exception as e:
@@ -105,10 +102,7 @@ def get_news(symbol):
 
     try:
         symbol = symbol.upper()
-        return jsonify({
-            "symbol": symbol,
-            "data": fetch_news(symbol)
-        }), 200
+        return jsonify(fetch_news(symbol)), 200
 
     except Exception as e:
         logger.error(f"NEWS FETCH FAILED | {symbol} | {e}")
@@ -124,7 +118,7 @@ def portfolio():
 
     try:
         data = get_portfolio()
-        return jsonify({"count": len(data), "data": data}), 200
+        return jsonify(data), 200
 
     except Exception as e:
         logger.error(f"PORTFOLIO READ FAILED | {e}")
@@ -132,7 +126,7 @@ def portfolio():
 
 
 # -------------------------
-# Risk History API (READ)
+# Risk History API
 # -------------------------
 @app.route("/api/risk_history/<symbol>", methods=["GET"])
 def risk_history(symbol):
@@ -142,14 +136,8 @@ def risk_history(symbol):
         return jsonify({"error": "Invalid stock symbol"}), 400
 
     try:
-        symbol = symbol.upper()
-        data = get_risk_history(symbol)
-
-        return jsonify({
-            "symbol": symbol,
-            "count": len(data),
-            "data": data
-        }), 200
+        data = get_risk_history(symbol.upper())
+        return jsonify(data), 200
 
     except Exception as e:
         logger.error(f"RISK HISTORY READ FAILED | {symbol} | {e}")
@@ -161,67 +149,46 @@ def risk_history(symbol):
 # -------------------------
 @app.route("/api/portfolio/add", methods=["POST"])
 def portfolio_add():
-    logger.info("API HIT | POST /api/portfolio/add")
-
     data = request.get_json(silent=True)
+
     if not data:
         return jsonify({"error": "Invalid JSON body"}), 400
 
     symbol = data.get("symbol")
     quantity = data.get("quantity")
-    price = data.get("price")
+    price = data.get("buy_price")
 
     if not is_valid_symbol(symbol):
         return jsonify({"error": "Invalid stock symbol"}), 400
 
-    if not isinstance(quantity, int) or not isinstance(price, (int, float)):
-        return jsonify({"error": "Invalid quantity or price"}), 400
-
     try:
-        success = add_to_portfolio(symbol.upper(), quantity, price)
-        if not success:
-            logger.error(f"PORTFOLIO ADD FAILED | {symbol}")
-            return jsonify({"error": "Database write failed"}), 500
-
-        logger.info(f"PORTFOLIO ADD SUCCESS | {symbol}")
-        return jsonify({"message": "Stock added to portfolio"}), 201
+        add_to_portfolio(symbol.upper(), quantity, price)
+        return jsonify({"message": "Stock added"}), 201
 
     except Exception as e:
-        logger.error(f"PORTFOLIO ADD ERROR | {symbol} | {e}")
+        logger.error(f"PORTFOLIO ADD FAILED | {e}")
         return jsonify({"error": "Database error"}), 500
 
 
 # -------------------------
-# Risk API (WRITE)
+# Risk Save API
 # -------------------------
 @app.route("/api/risk/save", methods=["POST"])
 def risk_save():
-    logger.info("API HIT | POST /api/risk/save")
-
     data = request.get_json(silent=True)
+
     if not data:
         return jsonify({"error": "Invalid JSON body"}), 400
 
     symbol = data.get("symbol")
     risk_score = data.get("risk_score")
 
-    if not is_valid_symbol(symbol):
-        return jsonify({"error": "Invalid stock symbol"}), 400
-
-    if not isinstance(risk_score, (int, float)):
-        return jsonify({"error": "Invalid risk_score"}), 400
-
     try:
-        success = save_risk(symbol.upper(), risk_score)
-        if not success:
-            logger.error(f"RISK SAVE FAILED | {symbol}")
-            return jsonify({"error": "Database write failed"}), 500
-
-        logger.info(f"RISK SAVE SUCCESS | {symbol}")
+        save_risk(symbol.upper(), risk_score)
         return jsonify({"message": "Risk saved"}), 201
 
     except Exception as e:
-        logger.error(f"RISK SAVE ERROR | {symbol} | {e}")
+        logger.error(f"RISK SAVE FAILED | {e}")
         return jsonify({"error": "Database error"}), 500
 
 
